@@ -8,10 +8,10 @@ export function useTFIDFSearch(index: string) {
     [index],
     ({
       dateFilter: { fromDate, toDate },
-      keyword,
+      keywords,
     }: {
       dateFilter: DateFilterType;
-      keyword: string;
+      keywords: string[];
     }): Promise<TFIDFResponse> => {
       return fetch(`http://localhost:5000/significant_word/${index}`, {
         method: "POST",
@@ -19,7 +19,7 @@ export function useTFIDFSearch(index: string) {
         body: JSON.stringify({
           fromDate: fromDate.toISOString(),
           toDate: toDate.toISOString(),
-          keyword,
+          keywords,
         }),
       }).then((res) => res.json());
     }

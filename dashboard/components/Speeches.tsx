@@ -15,7 +15,7 @@ import TopKWordsChart from "./TopKWordsChart";
 
 const Speeches = () => {
   const user = useUser();
-  const [keywordInput, setKeywordInput] = useState<string>("Russland");
+  const [keywordInput, setKeywordInput] = useState(["Russland"]);
   const [isRegex, setIsRegex] = useState<boolean>(false);
   const [dateFilter, setDateFilter] = useState<DateFilterType>({
     fromDate: new Date(2010, 0, 1),
@@ -34,13 +34,13 @@ const Speeches = () => {
     useTFIDFSearch("speeches_ger");
 
   function handleFrequencySearch() {
-    handleFrequencySearchAut({ keyword: keywordInput, isRegex });
-    handleFrequencySearchGer({ keyword: keywordInput, isRegex });
+    handleFrequencySearchAut({ keywords: keywordInput, isRegex });
+    handleFrequencySearchGer({ keywords: keywordInput, isRegex });
   }
 
   function handleTopKQuery() {
-    searchTopKAut({ keyword: keywordInput, dateFilter });
-    searchTopKGer({ keyword: keywordInput, dateFilter });
+    searchTopKAut({ keywords: keywordInput, dateFilter });
+    searchTopKGer({ keywords: keywordInput, dateFilter });
   }
 
   function handleSearch() {
@@ -73,7 +73,7 @@ const Speeches = () => {
   return (
     <div style={{ minWidth: "0" }}>
       <Search
-        value={keywordInput}
+        values={keywordInput}
         isRegex={isRegex}
         setValue={setKeywordInput}
         setIsRegex={setIsRegex}

@@ -1,6 +1,8 @@
+import { parse } from "path";
 import { useMutation } from "react-query";
 import { Amcat, AmcatQuery } from "../../amcat4react";
 import useUser from "../../hooks/useUser";
+import { parseKeywords } from "../modules/constants";
 import { DateFilterType, SpeechesResponse } from "../modules/types";
 
 export function useQuerySpeech(index: string) {
@@ -8,18 +10,18 @@ export function useQuerySpeech(index: string) {
   return useMutation(
     [index],
     ({
-      keyword,
+      keywords,
       isRegex,
       page,
       dateFilter,
     }: {
-      keyword: string;
+      keywords: string[];
       isRegex: boolean;
       page: number;
       dateFilter: DateFilterType;
     }): Promise<SpeechesResponse> => {
       const query: AmcatQuery = {
-        queries: { q0: keyword },
+        queries: parseKeywords(keywords),
         filters: {
           date: {
             gt: dateFilter.fromDate.toISOString(),

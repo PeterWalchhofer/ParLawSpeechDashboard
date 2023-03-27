@@ -21,7 +21,7 @@ import SpeechWordCloud from "./SpeechWordCloud";
 type DetailedSpeechesProps = {
   dateFilter: DateFilterType;
   setDateFilter: (dateFilter: DateFilterType) => void;
-  keywordInput: string;
+  keywordInput: string[];
   isRegex: boolean;
   country: "AUT" | "GER";
 };
@@ -41,7 +41,7 @@ export default function DetailedSpeeches({
   );
 
   const handleSpeechesSearch = () => {
-    getSpeeches({ keyword: keywordInput, isRegex, page, dateFilter });
+    getSpeeches({ keywords: keywordInput, isRegex, page, dateFilter });
   };
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function DetailedSpeeches({
     ? speeches?.speeches[chosenSpeech]?.term_tfidf
         .slice(0, 20)
         .map((word: any) => word.term)
-    : [keywordInput];
+    : keywordInput;
 
   return (
     <Grid2 container spacing={2} style={{ minHeight: "400px" }}>

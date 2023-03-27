@@ -1,5 +1,11 @@
 import { useMutation } from "react-query";
-import { AggregationInterval, Amcat, AmcatUser } from "../../amcat4react";
+import {
+  AggregationInterval,
+  Amcat,
+  AmcatQueryTerms,
+  AmcatUser,
+} from "../../amcat4react";
+import { parseKeywords } from "../modules/constants";
 import { FrequencyData } from "../modules/types";
 
 export function useFrequencySearch({
@@ -12,13 +18,13 @@ export function useFrequencySearch({
   return useMutation(
     [index, user],
     ({
-      keyword,
+      keywords,
       isRegex,
     }: {
-      keyword: string;
+      keywords: string[];
       isRegex: boolean;
     }): Promise<FrequencyData[]> => {
-      const query = { queries: { q0: keyword } };
+      const queries = {queries: parseKeywords(keywords)}
       const axes = [
         {
           name: "date",
@@ -27,7 +33,7 @@ export function useFrequencySearch({
         },
       ];
       if (!user) return Promise.resolve([]);
-      return Amcat.postAggregate(user, index, query, {
+      return Amcat.postAggregate(user, index, queries, {
         axes,
         display: "linechart",
       })

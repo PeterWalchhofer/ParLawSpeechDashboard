@@ -24,3 +24,9 @@ export function roundDateToYear(date: Date) {
 
   return roundedDate;
 }
+
+export function parseKeywords(keywords: string[]){
+  return Object.fromEntries(
+    keywords.map((k, i) => [`q${i}`, k])
+  );
+}
