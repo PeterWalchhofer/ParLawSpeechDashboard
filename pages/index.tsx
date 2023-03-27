@@ -1,7 +1,8 @@
+import { Button } from "@mui/material";
 import Head from "next/head";
-import { useMiddlecatContext, Indices } from "../amcat4react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
+import { Indices, useMiddlecatContext } from "../amcat4react";
 
 const StyleWrapper = styled.div`
   display: grid;
@@ -58,6 +59,24 @@ export default function Home() {
                 first need to login to <span>{login_host}</span>
               </p>
             ) : null}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Button
+              variant="outlined"
+              style={{
+                fontSize: "1.5rem",
+                color: "green",
+                borderColor: "green",
+              }}
+              onClick={() => router.push("/dashboard")}
+            >
+              Dashboard
+            </Button>
           </div>
           <div className="AuthForm">
             <AuthForm

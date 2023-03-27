@@ -1,0 +1,65 @@
+version: "3.8"
+services:
+  web_server:
+    image: ccsamsterdam/ngincat:4.0.5
+    build: ./ngincat
+    container_name: ngincat
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    environment:
+      - amcat4_client=http://amcat4client:3000
+      - amcat4_host=http://amcat4:5000/
+    ports:
+      - 80:80 # [local port]:[container port]
+    depends_on:
+      - "web_client"
+      - "api"
+  web_client:
+    image: ccsamsterdam/amcat4client:4.0.5
+    build: ./amcat4client
+    container_name: amcat4client
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    environment:
+      # this can be changed later, it is just the suggested default
+      - amcat4_host=http://localhost/amcat
+    depends_on:
+      - "api"
+  api:
+    image: ccsamsterdam/amcat4:4.0.5
+    build: ./amcat4
+    container_name: amcat4
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    environment:
+      # note that these take precedence over values set in `amcat4 config``
+      - amcat4_elastic_host=http://elastic7:9200
+      - amcat4_host=http://localhost/amcat
+    depends_on:
+      - "db"
+  db:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+    container_name: elastic7
+    restart: unless-stopped
+    # for security reasons, the database is only exposed to the other containers in the amcat-net network
+    # If you want to be able to access it locally, uncomment the following two lines
+    ports:
+    - 9200:9200
+    networks:
+      - amcat-net
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+      - xpack.security.enabled=false
+    # your database should have a folder on the host machine to permanently store data
+    # run: `mkdir -p /path/to/elastic-data && sudo chown -R 1000:1000 ~/.elasticsearch/database`
+    # to make it accessible for docker. Then uncomment the lines below (using a real path)
+    # volumes:
+    #   - /path/to/elastic-data:/usr/share/elasticsearch/data # [local path]:[container path]
+
+networks:
+  amcat-net:
