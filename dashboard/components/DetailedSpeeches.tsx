@@ -23,14 +23,12 @@ type DetailedSpeechesProps = {
   dateFilter: DateFilterType;
   setDateFilter: (dateFilter: DateFilterType) => void;
   keywordInput: string[];
-  isRegex: boolean;
   index: Index
 };
 export default function DetailedSpeeches({
   dateFilter,
   setDateFilter,
   keywordInput,
-  isRegex,
   index,
 }: DetailedSpeechesProps) {
   const [chosenSpeech, setChosenSpeech] = useState<number>(0);
@@ -42,7 +40,7 @@ export default function DetailedSpeeches({
   );
 
   const handleSpeechesSearch = () => {
-    getSpeeches({ keywords: keywordInput, isRegex, page, dateFilter });
+    getSpeeches({ keywords: keywordInput, page, dateFilter });
   };
 
   useEffect(() => {
@@ -168,7 +166,6 @@ export default function DetailedSpeeches({
                   <Highlighter
                     textToHighlight={speeches.speeches[chosenSpeech].text}
                     searchWords={highlightWords}
-                    caseSensitive={isRegex}
                     highlightStyle={{
                       backgroundColor: "white",
                       color: "black",

@@ -1,4 +1,3 @@
-import { parse } from "path";
 import { useMutation } from "react-query";
 import { Amcat, AmcatQuery } from "../../amcat4react";
 import useUser from "../../hooks/useUser";
@@ -11,12 +10,10 @@ export function useQuerySpeech(index: string) {
     [index],
     ({
       keywords,
-      isRegex,
       page,
       dateFilter,
     }: {
       keywords: string[];
-      isRegex: boolean;
       page: number;
       dateFilter: DateFilterType;
     }): Promise<SpeechesResponse> => {
@@ -33,7 +30,10 @@ export function useQuerySpeech(index: string) {
       return Amcat.postQuery(user!, index, query, { page })
         .then((res) => res.data)
         .then((data) => ({
-          speeches: data.results.map((speech: any) => ({...speech, term_tfidf: JSON.parse(speech.term_tfidf)})),
+          speeches: data.results.map((speech: any) => ({
+            ...speech,
+            term_tfidf: JSON.parse(speech.term_tfidf),
+          })),
           total: data.meta.total_count,
         }));
     }

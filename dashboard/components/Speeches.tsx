@@ -20,7 +20,6 @@ const Speeches = () => {
   const [keywordInput, setKeywordInput] = useState(["Russland"]);
   const [indexLeft, setIndexLeft] = useState<Index>("speeches_aut");
   const [indexRight, setIndexRight] = useState<Index>("speeches_ger");
-  const [isRegex, setIsRegex] = useState<boolean>(false);
   const [dateFilter, setDateFilter] = useState<DateFilterType>({
     fromDate: new Date(2013, 0, 1),
     toDate: new Date(2016, 0, 1),
@@ -46,8 +45,8 @@ const Speeches = () => {
 
   // API trigger functions
   function handleFrequencySearch() {
-    handleFrequencySearchAut({ keywords: keywordInput, isRegex });
-    handleFrequencySearchGer({ keywords: keywordInput, isRegex });
+    handleFrequencySearchAut({ keywords: keywordInput });
+    handleFrequencySearchGer({ keywords: keywordInput });
   }
   function handleTopKQuery() {
     searchTopKAut({ keywords: keywordInput, dateFilter });
@@ -90,9 +89,7 @@ const Speeches = () => {
     <div style={{ minWidth: "0" }}>
       <Search
         values={keywordInput}
-        isRegex={isRegex}
         setValue={setKeywordInput}
-        setIsRegex={setIsRegex}
         handleFetch={handleSearch}
       />
       <Grid2 container width="100%" marginTop={"10px"} spacing={2}>
@@ -203,7 +200,6 @@ const Speeches = () => {
           <DetailedSpeeches
             dateFilter={dateFilter}
             index={detailOpen}
-            isRegex={isRegex}
             keywordInput={keywordInput}
             setDateFilter={setDateFilter}
           />

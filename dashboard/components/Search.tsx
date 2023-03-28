@@ -6,23 +6,14 @@ import {
   TextField,
   TextFieldProps,
 } from "@mui/material";
-import { BLUE, GRAY } from "../modules/constants";
 
 type SearchType = {
   values: string[];
-  isRegex: boolean;
   setValue: (value: string[]) => void;
-  setIsRegex: (value: boolean) => void;
   handleFetch: () => void;
 } & TextFieldProps;
 
-const Search = ({
-  values,
-  isRegex,
-  setValue,
-  setIsRegex,
-  handleFetch,
-}: SearchType) => {
+const Search = ({ values, setValue, handleFetch }: SearchType) => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Autocomplete
@@ -51,19 +42,6 @@ const Search = ({
               ...params.InputProps,
               endAdornment: (
                 <>
-                  <IconButton onClick={() => setIsRegex(!isRegex)}>
-                    <span
-                      style={{
-                        color: GRAY,
-                        fontSize: "0.8rem",
-                        backgroundColor: isRegex ? BLUE : "transparent",
-                        padding: 3,
-                        borderRadius: 5,
-                      }}
-                    >
-                      .✱
-                    </span>
-                  </IconButton>
                   {values?.length && (
                     <IconButton onClick={() => setValue([])}>
                       <Clear />
