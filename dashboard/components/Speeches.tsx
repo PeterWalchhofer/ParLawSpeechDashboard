@@ -5,10 +5,12 @@ import Grid2 from "@mui/material/Unstable_Grid2";
 import { useEffect, useRef, useState } from "react";
 import useUser from "../../hooks/useUser";
 import { useFrequencySearch } from "../api/useFrequencySearch";
+import { usePartyAggregation } from "../api/usePartyAggregation";
 import { useTFIDFSearch } from "../api/useTFIDFSearch";
 import { BLUE } from "../modules/constants";
 import { DateFilterType } from "../modules/types";
 import DetailedSpeeches from "./DetailedSpeeches";
+import { PartyStatistics } from "./PartyStatistics";
 import Search from "./Search";
 import SpeechChart from "./SpeechChart";
 import TopKWordsChart from "./TopKWordsChart";
@@ -18,8 +20,8 @@ const Speeches = () => {
   const [keywordInput, setKeywordInput] = useState(["Russland"]);
   const [isRegex, setIsRegex] = useState<boolean>(false);
   const [dateFilter, setDateFilter] = useState<DateFilterType>({
-    fromDate: new Date(2010, 0, 1),
-    toDate: new Date(2013, 0, 1),
+    fromDate: new Date(2013, 0, 1),
+    toDate: new Date(2016, 0, 1),
   });
   const [detailOpen, setDetailOpen] = useState<"AUT" | "GER" | null>(null);
   const detailRef = useRef<HTMLDivElement>(null);
@@ -33,6 +35,12 @@ const Speeches = () => {
   const { mutate: searchTopKGer, data: topKResponseGer } =
     useTFIDFSearch("speeches_ger");
 
+  const { data: partyDataAut = [], mutate: queryPartyStatisticsAut } =
+    usePartyAggregation({ index: "speeches_aut", user });
+
+  const { data: partyDataGer = [], mutate: queryPartyStatisticsGer } =
+    usePartyAggregation({ index: "speeches_ger", user });
+
   function handleFrequencySearch() {
     handleFrequencySearchAut({ keywords: keywordInput, isRegex });
     handleFrequencySearchGer({ keywords: keywordInput, isRegex });
@@ -43,10 +51,16 @@ const Speeches = () => {
     searchTopKGer({ keywords: keywordInput, dateFilter });
   }
 
+  function handlePartyStatistics() {
+    queryPartyStatisticsAut({ keywords: keywordInput, dateFilter });
+    queryPartyStatisticsGer({ keywords: keywordInput, dateFilter });
+  }
+
   function handleSearch() {
     if (!keywordInput) return;
     handleFrequencySearch();
     handleTopKQuery();
+    handlePartyStatistics();
     setDetailOpen(null);
   }
   function handleDetailOpen(country: "AUT" | "GER") {
@@ -58,6 +72,7 @@ const Speeches = () => {
 
   useEffect(() => {
     handleTopKQuery();
+    handlePartyStatistics();
     console.log([
       dateFilter.fromDate.getFullYear(),
       dateFilter.toDate.getFullYear(),
@@ -82,9 +97,11 @@ const Speeches = () => {
       <Grid2 container width="100%" marginTop={"10px"} spacing={2}>
         {/* KEYWORD PLOT */}
         <Grid2 xs={6}>
-          <Typography variant="h5" color="common.white">
-            Austria
-          </Typography>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Typography variant="h5" color="common.white">
+              Austria
+            </Typography>
+          </div>
           {frequencyResponseAut && (
             <SpeechChart
               country="AUT"
@@ -95,9 +112,11 @@ const Speeches = () => {
           )}
         </Grid2>
         <Grid2 xs={6} style={{ height: 300 }}>
-          <Typography variant="h5" color="common.white">
-            Germany
-          </Typography>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Typography variant="h5" color="common.white">
+              Germany
+            </Typography>
+          </div>
           {frequencyResponseGer && (
             <SpeechChart
               country="GER"
@@ -107,11 +126,31 @@ const Speeches = () => {
             />
           )}
         </Grid2>
-        <Grid2 xs={6} minHeight={320}>
-          {topKResponseAut && <TopKWordsChart topKResponse={topKResponseAut} />}
+        <Grid2 xs={6} minHeight={431}>
+          {topKResponseAut && (
+            <TopKWordsChart topKResponse={topKResponseAut} yAxisRight />
+          )}
         </Grid2>
         <Grid2 xs={6}>
           {topKResponseGer && <TopKWordsChart topKResponse={topKResponseGer} />}
+        </Grid2>
+
+        <Grid2 xs={6} minHeight={320} paddingBottom={0}>
+          {/* {true && (
+            <PartyStatistics
+              index={"speeches_ger"}
+              keywordInput={keywordInput}
+            />
+          )} */}
+        </Grid2>
+        <Grid2 xs={6} minHeight={373} paddingBottom={0}>
+          {true && (
+            <PartyStatistics
+              index={"speeches_ger"}
+              keywordInput={keywordInput}
+              partyData={partyDataGer}
+            />
+          )}
         </Grid2>
 
         <Grid2 xs={6}>

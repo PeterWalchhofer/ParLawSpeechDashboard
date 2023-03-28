@@ -1,17 +1,19 @@
-import { upperFirst } from "lodash";
+import { capitalize } from "lodash";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import { BLACK } from "../modules/constants";
 import { TFIDFResponse } from "../modules/types";
-
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 type TopKWordsChartProps = {
   topKResponse: TFIDFResponse;
+  yAxisRight?: boolean;
 };
-export default function TopKWordsChart({ topKResponse }: TopKWordsChartProps) {
-  const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
+export default function TopKWordsChart({
+  topKResponse,
+  yAxisRight,
+}: TopKWordsChartProps) {
   const values = useMemo(
-    () => topKResponse.map((item) => item[1]),
+    () => topKResponse.map((item) => ({ x: capitalize(item[0]), y: item[1] })),
     [topKResponse]
   );
 
@@ -23,17 +25,17 @@ export default function TopKWordsChart({ topKResponse }: TopKWordsChartProps) {
       tooltip: {
         enabled: true,
       },
-      xaxis: {
-        categories: topKResponse.map((item) => upperFirst(item[0])),
+      yaxis: {
+        reversed: yAxisRight,
       },
 
       theme: { mode: "dark", palette: "palette3" },
-      yaxis: {
-        labels: {
-          formatter: function (val: number) {
-            return val.toFixed(3);
-          },
-        },
+      xaxis: {
+        // labels: {
+        //   formatter: function (val: number) {
+        //     return val.toFixed(3);
+        //   },
+        // },
         title: {
           text: "TF-IDF",
           // offsetX: 30,
@@ -48,7 +50,7 @@ export default function TopKWordsChart({ topKResponse }: TopKWordsChartProps) {
       },
       plotOptions: {
         bar: {
-          horizontal: false,
+          horizontal: true,
         },
       },
     }),
@@ -59,7 +61,7 @@ export default function TopKWordsChart({ topKResponse }: TopKWordsChartProps) {
     <div>
       <Chart
         type="bar"
-        height={280}
+        height={400}
         width={500}
         options={options}
         series={[{ name: "TF-IDF", data: values }]}

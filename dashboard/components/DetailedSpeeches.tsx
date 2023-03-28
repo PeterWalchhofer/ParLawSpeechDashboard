@@ -75,7 +75,7 @@ export default function DetailedSpeeches({
           Speeches
         </Typography>
       </Grid2>
-      <Grid2 xs={6}>
+      <Grid2 xs={12}>
         <DatePicker
           value={moment(dateFilter.fromDate)}
           onChange={(newValue) => {
@@ -84,8 +84,7 @@ export default function DetailedSpeeches({
           }}
           renderInput={(params) => <TextField {...params} size="small" />}
         />
-      </Grid2>
-      <Grid2 xs={6}>
+
         <DatePicker
           value={moment(dateFilter.toDate)}
           onChange={(newValue) =>
@@ -116,13 +115,13 @@ export default function DetailedSpeeches({
               justifyContent="space-between"
             >
               <ToggleButton
-                size="small"
                 value="check"
                 selected={highlightTfIdf}
                 onClick={() => setHighlightTfIdf(!highlightTfIdf)}
                 style={{
                   visibility: showWordCloud ? "hidden" : "visible",
-                  fontSize: "0.6rem",
+                  fontSize: "0.7rem",
+                  padding: 8,
                 }}
               >
                 TF-IDF
@@ -158,6 +157,12 @@ export default function DetailedSpeeches({
                   overflowX: "hidden",
                 }}
               >
+                <h4>{speeches.speeches[chosenSpeech].agenda} </h4>
+                <p>
+                  <b>{speeches.speeches[chosenSpeech].speaker} </b> ·{" "}
+                  <i>{speeches.speeches[chosenSpeech].party}</i>
+                </p>
+
                 <p>
                   <Highlighter
                     textToHighlight={speeches.speeches[chosenSpeech].text}

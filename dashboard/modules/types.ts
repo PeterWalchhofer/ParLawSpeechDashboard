@@ -1,4 +1,6 @@
 export type FrequencyData = { date_year: Date; n: number }
+
+export type Index = "speeches_aut" | "speeches_ger"
   
 export  type SpeechesResponse = {
     total: number;
