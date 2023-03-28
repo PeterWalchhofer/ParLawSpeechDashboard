@@ -14,7 +14,8 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useQuerySpeech } from "../api/useQuerySpeech";
-import { DateFilterType } from "../modules/types";
+import { INDEX_LABELS } from "../modules/constants";
+import { DateFilterType, Index } from "../modules/types";
 import SpeechTable from "./SpeechTable";
 import SpeechWordCloud from "./SpeechWordCloud";
 
@@ -23,21 +24,21 @@ type DetailedSpeechesProps = {
   setDateFilter: (dateFilter: DateFilterType) => void;
   keywordInput: string[];
   isRegex: boolean;
-  country: "AUT" | "GER";
+  index: Index
 };
 export default function DetailedSpeeches({
   dateFilter,
   setDateFilter,
   keywordInput,
   isRegex,
-  country,
+  index,
 }: DetailedSpeechesProps) {
   const [chosenSpeech, setChosenSpeech] = useState<number>(0);
   const [showWordCloud, setShowWordCloud] = useState<boolean>(false);
   const [page, setPage] = useState(0);
   const [highlightTfIdf, setHighlightTfIdf] = useState<boolean>(false);
   const { data: speeches, mutate: getSpeeches } = useQuerySpeech(
-    "speeches_" + country.toLowerCase()
+    index
   );
 
   const handleSpeechesSearch = () => {
@@ -47,11 +48,11 @@ export default function DetailedSpeeches({
   useEffect(() => {
     debounce(handleSpeechesSearch, 200)();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateFilter, page, country]);
+  }, [dateFilter, page, index]);
 
   useEffect(() => {
     setPage(0);
-  }, [dateFilter, country]);
+  }, [dateFilter, index]);
 
   const highlightWords = highlightTfIdf
     ? speeches?.speeches[chosenSpeech]?.term_tfidf
@@ -70,7 +71,7 @@ export default function DetailedSpeeches({
               textDecorationColor: "#4691bd",
             }}
           >
-            {country === "AUT" ? "Austrian" : "German"}
+            {INDEX_LABELS[index].countryFrom}
           </span>{" "}
           Speeches
         </Typography>

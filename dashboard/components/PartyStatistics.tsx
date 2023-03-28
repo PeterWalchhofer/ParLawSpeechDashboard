@@ -24,12 +24,14 @@ const PARTY_COLORS: Record<Index, Record<string, string>> = {
   speeches_aut: {
     ÖVP: "#000000",
     SPÖ: "#E4002B",
-    FPÖ: "#FFCE00",
-    GRÜNE: "#008A00",
-    NEOS: "#DC4405",
+    FPÖ: "#205CA5",
+    Grüne: "#008A00",
+    NEOS: "#E84188",
     KPÖ: "#00A1DE",
-    PILZ: "#00A1DE",
-    BZÖ: "#00A1DE",
+    PILZ: "#CCCCCC",
+    JETZT: "#CCCCCC",
+    BZÖ: "#EE7F00",
+    LIF: "#FECD00",
   },
 };
 

@@ -66,3 +66,14 @@ export function hexToHsl(color:string = "#ffffff"){
 
   return rgbToHsl(r, g, b);
 }
+
+export const INDEX_LABELS = {
+  speeches_aut: {
+    country: "Austria",
+    countryFrom: "Austrian"  
+  },
+  speeches_ger: {
+    country: "Germany",
+    countryFrom: "German"  
+  }
+}
