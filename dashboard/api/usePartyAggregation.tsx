@@ -16,11 +16,11 @@ export function usePartyAggregation({
       keywords,
       dateFilter,
     }: {
-      keywords: string[];
+      keywords?: string[];
       dateFilter: DateFilterType;
     }): Promise<PartyItem[]> => {
       const queries = {
-        queries: parseKeywords(keywords),
+        queries: keywords ? parseKeywords(keywords) : undefined,
         filters: {
           date: {
             gt: dateFilter.fromDate.toISOString(),

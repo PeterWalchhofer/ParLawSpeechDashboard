@@ -1,13 +1,17 @@
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import Grid2 from "@mui/material/Unstable_Grid2";
 import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useUser from "../../hooks/useUser";
+import { usePartyAggregation } from "../api/usePartyAggregation";
 import { BLACK, hexToHsl, PartyItem } from "../modules/constants";
-import { Index } from "../modules/types";
+import { DateFilterType, Index } from "../modules/types";
 
 type PartyStatisticsProps = {
   partyData: PartyItem[];
   keywordInput: string[];
   index: Index;
+  dateFilter: DateFilterType;
 };
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -39,15 +43,24 @@ export function PartyStatistics({
   keywordInput,
   index,
   partyData,
+  dateFilter,
 }: PartyStatisticsProps) {
   const user = useUser();
+  const [normalized, setNormalized] = useState<boolean>(false);
+  const { data: totals, mutate: queryTotals } = usePartyAggregation({
+    index,
+    user,
+  });
 
   const values = useMemo(
     () =>
       partyData
         .map((item) => ({
           x: item.party.split(/(?<=\/)/), // split including / to keep it. Array for line-break
-          y: item.n,
+          y: normalized
+            ? item.n /
+              (totals?.find((party) => party.party === item.party)?.n || 1)
+            : item.n,
           fillColor: PARTY_COLORS[index][item.party],
         }))
         .sort((a, b) => {
@@ -55,7 +68,7 @@ export function PartyStatistics({
           const lum_b = hexToHsl(b.fillColor)[2];
           return lum_a - lum_b;
         }),
-    [partyData]
+    [partyData, normalized]
   );
 
   const options: ApexCharts.ApexOptions = useMemo(
@@ -75,11 +88,11 @@ export function PartyStatistics({
 
       theme: { mode: "dark", palette: "palette3" },
       yaxis: {
-        // labels: {
-        //   formatter: function (val: number) {
-        //     return val.toFixed(3);
-        //   },
-        // },
+        labels: {
+          formatter: function (val: number) {
+            return val.toFixed(normalized ? 2 : 0);
+          },
+        },
         title: {
           text: "# Speeches",
           // offsetX: 30,
@@ -103,18 +116,50 @@ export function PartyStatistics({
         },
       },
     }),
-    [partyData]
+    [partyData, normalized]
   );
 
+  useEffect(() => {
+    queryTotals({ dateFilter });
+  }, [index]);
+
+  console.log(totals);
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <Chart
-        type="bar"
-        height={350}
-        width={430}
-        options={options}
-        series={[{ name: "Number of speeches", data: values }]}
-      />
-    </div>
+    <Grid2
+      container
+      style={{
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <Grid2 xs={12}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <ToggleButtonGroup
+            value={normalized}
+            exclusive
+            aria-label="outlined button group"
+            onChange={() => setNormalized((prev) => !prev)}
+            size="small"
+          >
+            <ToggleButton value={true}>Norm</ToggleButton>
+            <ToggleButton value={false}>Total</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+      </Grid2>
+      <Grid2>
+        <Chart
+          type="bar"
+          height={350}
+          width={430}
+          options={options}
+          series={[{ name: "Number of speeches", data: values }]}
+        />
+      </Grid2>
+    </Grid2>
   );
 }

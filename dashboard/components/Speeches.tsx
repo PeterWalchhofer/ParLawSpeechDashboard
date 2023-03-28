@@ -27,6 +27,8 @@ const Speeches = () => {
   });
   const [detailOpen, setDetailOpen] = useState<Index | null>(null);
   const detailRef = useRef<HTMLDivElement>(null);
+
+  // API calls
   const { data: frequencyResponseAut, mutate: handleFrequencySearchAut } =
     useFrequencySearch({ user, index: indexLeft });
   const { data: frequencyResponseGer, mutate: handleFrequencySearchGer } =
@@ -42,16 +44,15 @@ const Speeches = () => {
   const { data: partyDataGer, mutate: queryPartyStatisticsGer } =
     usePartyAggregation({ index: indexRight, user });
 
+  // API trigger functions
   function handleFrequencySearch() {
     handleFrequencySearchAut({ keywords: keywordInput, isRegex });
     handleFrequencySearchGer({ keywords: keywordInput, isRegex });
   }
-
   function handleTopKQuery() {
     searchTopKAut({ keywords: keywordInput, dateFilter });
     searchTopKGer({ keywords: keywordInput, dateFilter });
   }
-
   function handlePartyStatistics() {
     queryPartyStatisticsAut({ keywords: keywordInput, dateFilter });
     queryPartyStatisticsGer({ keywords: keywordInput, dateFilter });
@@ -157,6 +158,7 @@ const Speeches = () => {
               index={indexLeft}
               keywordInput={keywordInput}
               partyData={partyDataAut}
+              dateFilter={dateFilter}
             />
           )}
         </Grid2>
@@ -166,6 +168,7 @@ const Speeches = () => {
               index={indexRight}
               keywordInput={keywordInput}
               partyData={partyDataGer}
+              dateFilter={dateFilter}
             />
           )}
         </Grid2>
