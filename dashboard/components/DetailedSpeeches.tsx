@@ -1,6 +1,11 @@
 "use client";
+import { Square } from "@mui/icons-material";
 import {
+  FormControl,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Stack,
   Switch,
   TextField,
@@ -9,12 +14,14 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { DatePicker } from "@mui/x-date-pickers";
-import { debounce } from "lodash";
+import _, { debounce } from "lodash";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import Highlighter from "react-highlight-words";
+import useUser from "../../hooks/useUser";
+import { usePartyAggregation } from "../api/usePartyAggregation";
 import { useQuerySpeech } from "../api/useQuerySpeech";
-import { INDEX_LABELS } from "../modules/constants";
+import { INDEX_LABELS, PARTY_COLORS } from "../modules/constants";
 import { DateFilterType, Index } from "../modules/types";
 import SpeechTable from "./SpeechTable";
 import SpeechWordCloud from "./SpeechWordCloud";
@@ -23,34 +30,45 @@ type DetailedSpeechesProps = {
   dateFilter: DateFilterType;
   setDateFilter: (dateFilter: DateFilterType) => void;
   keywordInput: string[];
-  index: Index
+  index: Index;
+  selectedParty?: string;
+  setSelectedParty: (party: string) => void;
 };
 export default function DetailedSpeeches({
   dateFilter,
   setDateFilter,
   keywordInput,
   index,
+  selectedParty,
+  setSelectedParty,
 }: DetailedSpeechesProps) {
   const [chosenSpeech, setChosenSpeech] = useState<number>(0);
   const [showWordCloud, setShowWordCloud] = useState<boolean>(false);
   const [page, setPage] = useState(0);
   const [highlightTfIdf, setHighlightTfIdf] = useState<boolean>(false);
-  const { data: speeches, mutate: getSpeeches } = useQuerySpeech(
-    index
-  );
+  const { data: speeches, mutate: getSpeeches } = useQuerySpeech(index);
+  const user = useUser();
+  const { data: totals, mutate: queryTotals } = usePartyAggregation({
+    index,
+    user,
+  });
 
   const handleSpeechesSearch = () => {
-    getSpeeches({ keywords: keywordInput, page, dateFilter });
+    getSpeeches({ keywords: keywordInput, page, dateFilter, selectedParty });
   };
 
   useEffect(() => {
     debounce(handleSpeechesSearch, 200)();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateFilter, page, index]);
+  }, [dateFilter, page, index, selectedParty]);
 
   useEffect(() => {
     setPage(0);
   }, [dateFilter, index]);
+
+  useEffect(() => {
+    queryTotals({ dateFilter });
+  }, []);
 
   const highlightWords = highlightTfIdf
     ? speeches?.speeches[chosenSpeech]?.term_tfidf
@@ -74,24 +92,66 @@ export default function DetailedSpeeches({
           Speeches
         </Typography>
       </Grid2>
-      <Grid2 xs={12}>
-        <DatePicker
-          value={moment(dateFilter.fromDate)}
-          onChange={(newValue) => {
-            newValue &&
-              setDateFilter({ ...dateFilter, fromDate: newValue.toDate() });
-          }}
-          renderInput={(params) => <TextField {...params} size="small" />}
-        />
-
-        <DatePicker
-          value={moment(dateFilter.toDate)}
-          onChange={(newValue) =>
-            newValue &&
-            setDateFilter({ ...dateFilter, toDate: newValue.toDate() })
-          }
-          renderInput={(params) => <TextField {...params} size="small" />}
-        />
+      <Grid2 xs={12} container>
+        <Grid2>
+          <DatePicker
+            label="From"
+            value={moment(dateFilter.fromDate)}
+            onChange={(newValue) => {
+              newValue &&
+                setDateFilter({ ...dateFilter, fromDate: newValue.toDate() });
+            }}
+            renderInput={(params) => <TextField {...params} size="small" />}
+          />
+        </Grid2>
+        <Grid2>
+          <DatePicker
+            label="To"
+            value={moment(dateFilter.toDate)}
+            onChange={(newValue) =>
+              newValue &&
+              setDateFilter({ ...dateFilter, toDate: newValue.toDate() })
+            }
+            renderInput={(params) => <TextField {...params} size="small" />}
+          />
+        </Grid2>
+        <Grid2>
+          {totals && (
+            <FormControl>
+              <InputLabel id="test-select-label" shrink={true}>
+                Party
+              </InputLabel>
+              <Select
+                value={selectedParty || ""}
+                onChange={(e) => setSelectedParty(e.target.value)}
+                displayEmpty
+                labelId="test-select-label"
+                size="small"
+                label="Party"
+                notched={true}
+                // style={{ color: "white", marginLeft: 10, fontSize: "1.2rem" }}
+              >
+                <MenuItem value={""}>
+                  All Parties ({_.sum(totals.map((partyCount) => partyCount.n))}
+                  )
+                </MenuItem>
+                {totals
+                  .sort((a, b) => b.n - a.n)
+                  .map((partyCount) => (
+                    <MenuItem value={partyCount.party} key={partyCount.party}>
+                      <Square
+                        style={{
+                          color: PARTY_COLORS[index][partyCount.party],
+                          marginRight: 8,
+                        }}
+                      />
+                      {partyCount.party} ({partyCount.n})
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          )}
+        </Grid2>
       </Grid2>
 
       {speeches && (

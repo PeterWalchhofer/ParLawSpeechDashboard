@@ -1,3 +1,5 @@
+import { Index } from "./types";
+
 export const BLUE = "#373F51";
 export const BLACK = "#1B1B1E";
 export const GRAY = "#D8DBE2";
@@ -77,3 +79,27 @@ export const INDEX_LABELS = {
     countryFrom: "German"  
   }
 }
+
+export const PARTY_COLORS: Record<Index, Record<string, string>> = {
+  speeches_ger: {
+    "CDU/CSU": "#000000",
+    SPD: "#E4002B",
+    FDP: "#FFCE00",
+    "BÜNDNIS 90/DIE GRÜNEN": "#008A00",
+    "DIE LINKE": "#DC4405",
+    AfD: "#00A1DE",
+    PIRATEN: "#00A1DE",
+  },
+  speeches_aut: {
+    ÖVP: "#000000",
+    SPÖ: "#E4002B",
+    FPÖ: "#205CA5",
+    Grüne: "#008A00",
+    NEOS: "#E84188",
+    KPÖ: "#00A1DE",
+    PILZ: "#CCCCCC",
+    JETZT: "#CCCCCC",
+    BZÖ: "#EE7F00",
+    LIF: "#FECD00",
+  },
+};

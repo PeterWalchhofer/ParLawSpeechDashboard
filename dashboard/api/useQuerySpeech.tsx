@@ -12,10 +12,12 @@ export function useQuerySpeech(index: string) {
       keywords,
       page,
       dateFilter,
+      selectedParty,
     }: {
       keywords: string[];
       page: number;
       dateFilter: DateFilterType;
+      selectedParty?: string;
     }): Promise<SpeechesResponse> => {
       const query: AmcatQuery = {
         queries: parseKeywords(keywords),
@@ -24,6 +26,11 @@ export function useQuerySpeech(index: string) {
             gt: dateFilter.fromDate.toISOString(),
             lt: dateFilter.toDate.toISOString(),
           },
+          ...(selectedParty && {
+            party: {
+              values: [selectedParty],
+            },
+          }),
         },
       };
 

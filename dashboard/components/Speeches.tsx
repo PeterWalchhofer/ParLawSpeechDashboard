@@ -26,21 +26,25 @@ const Speeches = () => {
   });
   const [detailOpen, setDetailOpen] = useState<Index | null>(null);
   const detailRef = useRef<HTMLDivElement>(null);
+  const [selectedParty, setSelectedParty] = useState<Record<
+    string,
+    string
+  > | null>(null);
 
   // API calls
-  const { data: frequencyResponseAut, mutate: handleFrequencySearchAut } =
+  const { data: frequencyResponseAut = [], mutate: handleFrequencySearchAut } =
     useFrequencySearch({ user, index: indexLeft });
-  const { data: frequencyResponseGer, mutate: handleFrequencySearchGer } =
+  const { data: frequencyResponseGer = [], mutate: handleFrequencySearchGer } =
     useFrequencySearch({ user, index: indexRight });
 
-  const { mutate: searchTopKAut, data: topKResponseAut } =
+  const { mutate: searchTopKAut, data: topKResponseAut = [] } =
     useTFIDFSearch(indexLeft);
-  const { mutate: searchTopKGer, data: topKResponseGer } =
+  const { mutate: searchTopKGer, data: topKResponseGer = [] } =
     useTFIDFSearch(indexRight);
 
-  const { data: partyDataAut, mutate: queryPartyStatisticsAut } =
+  const { data: partyDataAut = [], mutate: queryPartyStatisticsAut } =
     usePartyAggregation({ index: indexLeft, user });
-  const { data: partyDataGer, mutate: queryPartyStatisticsGer } =
+  const { data: partyDataGer = [], mutate: queryPartyStatisticsGer } =
     usePartyAggregation({ index: indexRight, user });
 
   // API trigger functions
@@ -71,6 +75,12 @@ const Speeches = () => {
     }, 1000);
   }
 
+  function handleSetSelectedParty(index: string) {
+    return (party: string) => {
+      setSelectedParty({ [index]: party });
+    };
+  }
+
   useEffect(() => {
     handleTopKQuery();
     handlePartyStatistics();
@@ -92,6 +102,7 @@ const Speeches = () => {
         setValue={setKeywordInput}
         handleFetch={handleSearch}
       />
+
       <Grid2 container width="100%" marginTop={"10px"} spacing={2}>
         {/* KEYWORD PLOT */}
         <Grid2 xs={6}>
@@ -108,14 +119,13 @@ const Speeches = () => {
               ))}
             </Select>
           </div>
-          {frequencyResponseAut && (
-            <SpeechChart
-              country="AUT"
-              keywordResponse={frequencyResponseAut}
-              dateFilter={dateFilter}
-              setDateFilter={setDateFilter}
-            />
-          )}
+
+          <SpeechChart
+            country="AUT"
+            keywordResponse={frequencyResponseAut}
+            dateFilter={dateFilter}
+            setDateFilter={setDateFilter}
+          />
         </Grid2>
         <Grid2 xs={6} style={{ height: 300 }}>
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -131,43 +141,40 @@ const Speeches = () => {
               ))}
             </Select>
           </div>
-          {frequencyResponseGer && (
-            <SpeechChart
-              country="GER"
-              keywordResponse={frequencyResponseGer}
-              dateFilter={dateFilter}
-              setDateFilter={setDateFilter}
-            />
-          )}
+
+          <SpeechChart
+            country="GER"
+            keywordResponse={frequencyResponseGer}
+            dateFilter={dateFilter}
+            setDateFilter={setDateFilter}
+          />
         </Grid2>
         <Grid2 xs={6} minHeight={431}>
-          {topKResponseAut && (
-            <TopKWordsChart topKResponse={topKResponseAut} yAxisRight />
-          )}
+          <TopKWordsChart topKResponse={topKResponseAut} yAxisRight />
         </Grid2>
         <Grid2 xs={6}>
-          {topKResponseGer && <TopKWordsChart topKResponse={topKResponseGer} />}
+          <TopKWordsChart topKResponse={topKResponseGer} />
         </Grid2>
 
-        <Grid2 xs={6} minHeight={320} paddingBottom={0}>
-          {partyDataAut && (
-            <PartyStatistics
-              index={indexLeft}
-              keywordInput={keywordInput}
-              partyData={partyDataAut}
-              dateFilter={dateFilter}
-            />
-          )}
+        <Grid2 xs={6} minHeight={380} paddingBottom={0}>
+          <PartyStatistics
+            index={indexLeft}
+            keywordInput={keywordInput}
+            partyData={partyDataAut}
+            dateFilter={dateFilter}
+            selectedParty={selectedParty?.[indexLeft]}
+            setSelectedParty={handleSetSelectedParty(indexLeft)}
+          />
         </Grid2>
         <Grid2 xs={6} minHeight={373} paddingBottom={0}>
-          {partyDataGer && (
-            <PartyStatistics
-              index={indexRight}
-              keywordInput={keywordInput}
-              partyData={partyDataGer}
-              dateFilter={dateFilter}
-            />
-          )}
+          <PartyStatistics
+            index={indexRight}
+            keywordInput={keywordInput}
+            partyData={partyDataGer}
+            dateFilter={dateFilter}
+            selectedParty={selectedParty?.[indexRight]}
+            setSelectedParty={handleSetSelectedParty(indexRight)}
+          />
         </Grid2>
 
         <Grid2 xs={6}>
@@ -202,6 +209,8 @@ const Speeches = () => {
             index={detailOpen}
             keywordInput={keywordInput}
             setDateFilter={setDateFilter}
+            selectedParty={selectedParty?.[detailOpen]}
+            setSelectedParty={handleSetSelectedParty(detailOpen)}
           />
         )}
       </div>
