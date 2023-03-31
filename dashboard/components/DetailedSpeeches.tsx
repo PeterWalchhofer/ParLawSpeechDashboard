@@ -68,7 +68,7 @@ export default function DetailedSpeeches({
 
   useEffect(() => {
     queryTotals({ dateFilter });
-  }, []);
+  }, [index]);
 
   const highlightWords = highlightTfIdf
     ? speeches?.speeches[chosenSpeech]?.term_tfidf
@@ -216,15 +216,15 @@ export default function DetailedSpeeches({
                   overflowX: "hidden",
                 }}
               >
-                <h4>{speeches.speeches[chosenSpeech].agenda} </h4>
+                <h4>{speeches.speeches[chosenSpeech]?.agenda} </h4>
                 <p>
-                  <b>{speeches.speeches[chosenSpeech].speaker} </b> ·{" "}
-                  <i>{speeches.speeches[chosenSpeech].party}</i>
+                  <b>{speeches.speeches[chosenSpeech]?.speaker} </b> ·{" "}
+                  <i>{speeches.speeches[chosenSpeech]?.party}</i>
                 </p>
 
                 <p>
                   <Highlighter
-                    textToHighlight={speeches.speeches[chosenSpeech].text}
+                    textToHighlight={speeches.speeches[chosenSpeech]?.text}
                     searchWords={highlightWords}
                     highlightStyle={{
                       backgroundColor: "white",

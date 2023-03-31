@@ -31,7 +31,7 @@ const Speeches = () => {
     string
   > | null>(null);
 
-  // API calls
+  // API hooks
   const { data: frequencyResponseAut = [], mutate: handleFrequencySearchAut } =
     useFrequencySearch({ user, index: indexLeft });
   const { data: frequencyResponseGer = [], mutate: handleFrequencySearchGer } =
@@ -70,6 +70,7 @@ const Speeches = () => {
   }
   function handleDetailOpen(country: Index) {
     setDetailOpen(country);
+    setSelectedParty(null);
     setTimeout(() => {
       detailRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 1000);
@@ -78,6 +79,7 @@ const Speeches = () => {
   function handleSetSelectedParty(index: string) {
     return (party: string) => {
       setSelectedParty({ [index]: party });
+      handleDetailOpen(index as Index);
     };
   }
 
