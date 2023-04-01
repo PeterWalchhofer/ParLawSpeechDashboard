@@ -70,7 +70,6 @@ const Speeches = () => {
   }
   function handleDetailOpen(country: Index) {
     setDetailOpen(country);
-    setSelectedParty(null);
     setTimeout(() => {
       detailRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 1000);
@@ -182,7 +181,10 @@ const Speeches = () => {
         <Grid2 xs={6}>
           <div style={{ justifyContent: "center", display: "flex" }}>
             <IconButton
-              onClick={() => handleDetailOpen(indexLeft)}
+              onClick={() => {
+                setSelectedParty(null);
+                handleDetailOpen(indexLeft);
+              }}
               style={{
                 backgroundColor: detailOpen === indexLeft ? BLUE : undefined,
               }}
@@ -194,7 +196,10 @@ const Speeches = () => {
         <Grid2 xs={6}>
           <div style={{ justifyContent: "center", display: "flex" }}>
             <IconButton
-              onClick={() => handleDetailOpen(indexRight)}
+              onClick={() => {
+                setSelectedParty(null);
+                handleDetailOpen(indexRight);
+              }}
               style={{
                 backgroundColor: detailOpen === indexRight ? BLUE : undefined,
               }}
