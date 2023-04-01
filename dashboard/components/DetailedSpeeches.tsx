@@ -172,6 +172,7 @@ export default function DetailedSpeeches({
               spacing={1}
               alignItems="center"
               justifyContent="space-between"
+              marginBottom={0.5}
             >
               <ToggleButton
                 value="check"

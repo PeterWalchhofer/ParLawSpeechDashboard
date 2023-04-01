@@ -48,7 +48,7 @@ export default function Home() {
         <title>AmCAT 4 client</title>
         <meta name="description" content="AmCAT 4 client" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/amcat-logo.svg" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <main>
         <StyleWrapper>
