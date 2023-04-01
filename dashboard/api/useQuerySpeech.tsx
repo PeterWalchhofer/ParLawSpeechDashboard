@@ -1,24 +1,26 @@
-import { useMutation } from "react-query";
+import { useQuery } from "react-query";
 import { Amcat, AmcatQuery } from "../../amcat4react";
 import useUser from "../../hooks/useUser";
 import { parseKeywords } from "../modules/constants";
 import { DateFilterType, SpeechesResponse } from "../modules/types";
 
-export function useQuerySpeech(index: string) {
+export function useQuerySpeech({
+  keywords,
+  page,
+  dateFilter,
+  selectedParty,
+  index,
+}: {
+  index: string;
+  keywords: string[];
+  page: number;
+  dateFilter: DateFilterType;
+  selectedParty?: string;
+}) {
   const user = useUser();
-  return useMutation(
-    [index],
-    ({
-      keywords,
-      page,
-      dateFilter,
-      selectedParty,
-    }: {
-      keywords: string[];
-      page: number;
-      dateFilter: DateFilterType;
-      selectedParty?: string;
-    }): Promise<SpeechesResponse> => {
+  return useQuery(
+    [index, keywords, page, dateFilter, selectedParty],
+    (): Promise<SpeechesResponse> => {
       const query: AmcatQuery = {
         queries: parseKeywords(keywords),
         filters: {

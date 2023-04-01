@@ -101,5 +101,6 @@ export const PARTY_COLORS: Record<Index, Record<string, string>> = {
     JETZT: "#CCCCCC",
     BZÖ: "#EE7F00",
     LIF: "#FECD00",
+    STRONACH: "#f8d323",
   },
 };

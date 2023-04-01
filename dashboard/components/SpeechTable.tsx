@@ -1,5 +1,5 @@
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
-import { IconButton, TableFooter } from "@mui/material";
+import { ArrowBack, ArrowForward, Circle } from "@mui/icons-material";
+import { Chip, IconButton, TableFooter } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,7 +7,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { SpeechesResponse } from "../modules/types";
+import { PARTY_COLORS } from "../modules/constants";
+import { Index, SpeechesResponse } from "../modules/types";
 
 type SpeechTableProps = {
   speechesResponse: SpeechesResponse;
@@ -15,6 +16,7 @@ type SpeechTableProps = {
   chosenSpeech: number;
   handleChangePage: (page: number) => void;
   setChosenSpeech: (speech: number) => void;
+  index: Index;
 };
 
 export default function SpeechTable({
@@ -23,6 +25,7 @@ export default function SpeechTable({
   page,
   setChosenSpeech,
   chosenSpeech,
+  index,
 }: SpeechTableProps) {
   return (
     <TableContainer component={Paper}>
@@ -43,7 +46,20 @@ export default function SpeechTable({
               key={`${speech.date} ${speech.speaker} ${speech.agenda} ${i}`}
             >
               <TableCell align="right">{speech.date.slice(0, 16)}</TableCell>
-              <TableCell align="right">{speech.speaker}</TableCell>
+              <TableCell align="right">
+                {speech.speaker}
+                <br />
+
+                <Chip
+                  label={speech.party}
+                  size="small"
+                  icon={
+                    <Circle
+                      style={{ color: PARTY_COLORS[index][speech.party] }}
+                    />
+                  }
+                />
+              </TableCell>
               <TableCell align="right">
                 {speech.agenda.slice(0, 50)}...
               </TableCell>

@@ -39,9 +39,10 @@ export function PartyStatistics({
 }: PartyStatisticsProps) {
   const user = useUser();
   const [normalized, setNormalized] = useState<boolean>(false);
-  const { data: totals, mutate: queryTotals } = usePartyAggregation({
+  const { data: totals } = usePartyAggregation({
     index,
     user,
+    dateFilter,
   });
   const ref = useRef<HTMLDivElement>(null);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
@@ -142,12 +143,8 @@ export function PartyStatistics({
         },
       },
     }),
-    [partyData, normalized, selectedItem]
+    [partyData, normalized, selectedItem, totals]
   );
-
-  useEffect(() => {
-    queryTotals({ dateFilter });
-  }, [index]);
 
   useEffect(() => {
     if (!selectedParty) {

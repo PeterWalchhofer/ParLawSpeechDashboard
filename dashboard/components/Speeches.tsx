@@ -32,40 +32,43 @@ const Speeches = () => {
   > | null>(null);
 
   // API hooks
-  const { data: frequencyResponseAut = [], mutate: handleFrequencySearchAut } =
-    useFrequencySearch({ user, index: indexLeft });
-  const { data: frequencyResponseGer = [], mutate: handleFrequencySearchGer } =
-    useFrequencySearch({ user, index: indexRight });
+  const { data: frequencyResponseAut = [] } = useFrequencySearch({
+    user,
+    index: indexLeft,
+    keywords: keywordInput,
+  });
+  const { data: frequencyResponseGer = [] } = useFrequencySearch({
+    user,
+    index: indexRight,
+    keywords: keywordInput,
+  });
 
-  const { mutate: searchTopKAut, data: topKResponseAut = [] } =
-    useTFIDFSearch(indexLeft);
-  const { mutate: searchTopKGer, data: topKResponseGer = [] } =
-    useTFIDFSearch(indexRight);
+  const { data: topKResponseAut = [] } = useTFIDFSearch({
+    index: indexLeft,
+    dateFilter,
+    keywords: keywordInput,
+  });
+  const { data: topKResponseGer = [] } = useTFIDFSearch({
+    index: indexRight,
+    dateFilter,
+    keywords: keywordInput,
+  });
 
-  const { data: partyDataAut = [], mutate: queryPartyStatisticsAut } =
-    usePartyAggregation({ index: indexLeft, user });
-  const { data: partyDataGer = [], mutate: queryPartyStatisticsGer } =
-    usePartyAggregation({ index: indexRight, user });
-
-  // API trigger functions
-  function handleFrequencySearch() {
-    handleFrequencySearchAut({ keywords: keywordInput });
-    handleFrequencySearchGer({ keywords: keywordInput });
-  }
-  function handleTopKQuery() {
-    searchTopKAut({ keywords: keywordInput, dateFilter });
-    searchTopKGer({ keywords: keywordInput, dateFilter });
-  }
-  function handlePartyStatistics() {
-    queryPartyStatisticsAut({ keywords: keywordInput, dateFilter });
-    queryPartyStatisticsGer({ keywords: keywordInput, dateFilter });
-  }
+  const { data: partyDataAut = [] } = usePartyAggregation({
+    index: indexLeft,
+    user,
+    keywords: keywordInput,
+    dateFilter,
+  });
+  const { data: partyDataGer = [] } = usePartyAggregation({
+    index: indexRight,
+    user,
+    keywords: keywordInput,
+    dateFilter,
+  });
 
   function handleSearch() {
     if (!keywordInput) return;
-    handleFrequencySearch();
-    handleTopKQuery();
-    handlePartyStatistics();
     setDetailOpen(null);
   }
   function handleDetailOpen(country: Index) {
@@ -81,16 +84,6 @@ const Speeches = () => {
       handleDetailOpen(index as Index);
     };
   }
-
-  useEffect(() => {
-    handleTopKQuery();
-    handlePartyStatistics();
-    console.log([
-      dateFilter.fromDate.getFullYear(),
-      dateFilter.toDate.getFullYear(),
-    ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateFilter.fromDate.getFullYear(), dateFilter.toDate.getFullYear()]);
 
   useEffect(() => {
     handleSearch();

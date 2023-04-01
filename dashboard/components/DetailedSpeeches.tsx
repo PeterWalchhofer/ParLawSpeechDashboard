@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { DatePicker } from "@mui/x-date-pickers";
-import _, { debounce } from "lodash";
+import _ from "lodash";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import Highlighter from "react-highlight-words";
@@ -46,29 +46,23 @@ export default function DetailedSpeeches({
   const [showWordCloud, setShowWordCloud] = useState<boolean>(false);
   const [page, setPage] = useState(0);
   const [highlightTfIdf, setHighlightTfIdf] = useState<boolean>(false);
-  const { data: speeches, mutate: getSpeeches } = useQuerySpeech(index);
+  const { data: speeches } = useQuerySpeech({
+    dateFilter,
+    index,
+    selectedParty,
+    keywords: keywordInput,
+    page,
+  });
   const user = useUser();
-  const { data: totals, mutate: queryTotals } = usePartyAggregation({
+  const { data: totals } = usePartyAggregation({
     index,
     user,
+    dateFilter,
   });
-
-  const handleSpeechesSearch = () => {
-    getSpeeches({ keywords: keywordInput, page, dateFilter, selectedParty });
-  };
-
-  useEffect(() => {
-    debounce(handleSpeechesSearch, 200)();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateFilter, page, index, selectedParty]);
 
   useEffect(() => {
     setPage(0);
-  }, [dateFilter, index]);
-
-  useEffect(() => {
-    queryTotals({ dateFilter });
-  }, [index]);
+  }, [dateFilter, index, selectedParty]);
 
   const highlightWords = highlightTfIdf
     ? speeches?.speeches[chosenSpeech]?.term_tfidf
@@ -77,7 +71,7 @@ export default function DetailedSpeeches({
     : keywordInput;
 
   return (
-    <Grid2 container spacing={2} style={{ minHeight: "400px" }}>
+    <Grid2 container spacing={2} style={{ minHeight: "500px" }}>
       <Grid2 xs={12} style={{ marginBottom: 25 }}>
         <Typography variant="h4" color="common.white">
           Explore{" "}
@@ -155,7 +149,7 @@ export default function DetailedSpeeches({
       </Grid2>
 
       {speeches && (
-        <>
+        <Grid2 container maxHeight={"900px"} minHeight={"900px"}>
           <Grid2 xs={5}>
             <SpeechTable
               speechesResponse={speeches}
@@ -163,10 +157,11 @@ export default function DetailedSpeeches({
               page={page}
               chosenSpeech={chosenSpeech}
               setChosenSpeech={setChosenSpeech}
+              index={index}
             />
           </Grid2>
 
-          <Grid2 xs={6} maxHeight="780px" style={{ margin: 10 }}>
+          <Grid2 xs={6} style={{ margin: 10 }} height="100%">
             <Stack
               direction="row"
               spacing={1}
@@ -238,7 +233,7 @@ export default function DetailedSpeeches({
               </Paper>
             )}
           </Grid2>
-        </>
+        </Grid2>
       )}
     </Grid2>
   );

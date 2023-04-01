@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { AggregationInterval, Amcat, AmcatUser } from "../../amcat4react";
 import { parseKeywords } from "../modules/constants";
 import { FrequencyData } from "../modules/types";
@@ -6,13 +6,15 @@ import { FrequencyData } from "../modules/types";
 export function useFrequencySearch({
   index,
   user,
+  keywords
 }: {
   index: string;
   user: AmcatUser | undefined;
+  keywords: string[] 
 }) {
-  return useMutation(
-    [index, user],
-    ({ keywords }: { keywords: string[] }): Promise<FrequencyData[]> => {
+  return useQuery(
+    [index, user, keywords],
+    (): Promise<FrequencyData[]> => {
       const queries = { queries: parseKeywords(keywords) };
       const axes = [
         {
