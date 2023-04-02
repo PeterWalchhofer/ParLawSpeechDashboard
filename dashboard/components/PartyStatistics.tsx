@@ -142,6 +142,11 @@ export function PartyStatistics({
           distributed: true,
         },
       },
+      noData: {
+        text: "No data",
+        align: "center",
+        verticalAlign: "middle",
+      },
     }),
     [partyData, normalized, selectedItem, totals]
   );

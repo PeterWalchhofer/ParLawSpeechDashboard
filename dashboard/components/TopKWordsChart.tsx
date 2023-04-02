@@ -53,6 +53,11 @@ export default function TopKWordsChart({
           horizontal: true,
         },
       },
+      noData: {
+        text: "No data",
+        align: "center",
+        verticalAlign: "middle",
+      },
     }),
     [topKResponse]
   );
