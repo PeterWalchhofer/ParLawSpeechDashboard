@@ -1,4 +1,5 @@
 import { HTMLAttributes } from "react";
+import { OptedLogo } from "./OptedLogo";
 
 type DivProps = HTMLAttributes<HTMLDivElement>;
 
@@ -25,17 +26,11 @@ export const Footer = ({ children, ...rest }: MyComponentProps) => {
           alignItems: "center",
         }}
       >
-        <div
+        <OptedLogo
           style={{
-            backgroundColor: "white",
-            borderRadius: "90px",
-            display: "flex",
-            padding: "3px",
             marginRight: "20px",
           }}
-        >
-          <img src="/opted_logo_stylized_blue.svg" alt="Logo of OPTED" />
-        </div>
+        />
         <div
           style={{
             marginLeft: "10px",

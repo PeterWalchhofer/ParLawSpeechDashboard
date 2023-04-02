@@ -1,6 +1,6 @@
 import { Index } from "./types";
 
-export const BLUE = "#373F51";
+export const BLUE = "#71b7f4";
 export const BLACK = "#1B1B1E";
 export const GRAY = "#D8DBE2";
 

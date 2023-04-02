@@ -1,7 +1,7 @@
 import { capitalize } from "lodash";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
-import { BLACK } from "../modules/constants";
+import { BLACK, BLUE } from "../modules/constants";
 import { TFIDFResponse } from "../modules/types";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 type TopKWordsChartProps = {
@@ -19,6 +19,7 @@ export default function TopKWordsChart({
 
   const options: ApexCharts.ApexOptions = useMemo(
     () => ({
+      colors: [BLUE],
       dataLabels: {
         enabled: false,
       },

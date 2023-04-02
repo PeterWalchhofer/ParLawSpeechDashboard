@@ -2,7 +2,7 @@
 import _ from "lodash";
 import dynamic from "next/dynamic";
 import { useCallback, useMemo } from "react";
-import { BLACK, roundDateToYear } from "../modules/constants";
+import { BLACK, BLUE, roundDateToYear } from "../modules/constants";
 import { DateFilterType, FrequencyData } from "../modules/types";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -41,6 +41,7 @@ export default function SpeechChart({
 
   const options: ApexCharts.ApexOptions = useMemo(
     () => ({
+      colors: [BLUE],
       tooltip: {
         enabled: true,
         x: {
