@@ -37,8 +37,8 @@ export default function SpeechTable({
             <TableCell align="right">Agenda</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {speechesResponse.speeches.map((speech: any, i: number) => (
+        <TableBody style={{ height: "100%" }}>
+          {speechesResponse.speeches.map((speech, i) => (
             <TableRow
               onClick={() => setChosenSpeech(i)}
               selected={i === chosenSpeech}
