@@ -70,18 +70,18 @@ export function hexToHsl(color:string = "#ffffff"){
 }
 
 export const INDEX_LABELS = {
-  speeches_aut: {
+  speeches_austria: {
     country: "Austria",
     countryFrom: "Austrian"  
   },
-  speeches_ger: {
+  speeches_germany: {
     country: "Germany",
     countryFrom: "German"  
   }
 }
 
 export const PARTY_COLORS: Record<Index, Record<string, string>> = {
-  speeches_ger: {
+  speeches_germany: {
     "CDU/CSU": "#000000",
     SPD: "#E4002B",
     FDP: "#FFCE00",
@@ -90,7 +90,7 @@ export const PARTY_COLORS: Record<Index, Record<string, string>> = {
     AfD: "#00A1DE",
     PIRATEN: "#00A1DE",
   },
-  speeches_aut: {
+  speeches_austria: {
     ÖVP: "#000000",
     SPÖ: "#E4002B",
     FPÖ: "#205CA5",

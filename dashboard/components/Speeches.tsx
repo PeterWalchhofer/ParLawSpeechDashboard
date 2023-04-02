@@ -18,8 +18,8 @@ import TopKWordsChart from "./TopKWordsChart";
 const Speeches = () => {
   const user = useUser();
   const [keywordInput, setKeywordInput] = useState(["Russland"]);
-  const [indexLeft, setIndexLeft] = useState<Index>("speeches_aut");
-  const [indexRight, setIndexRight] = useState<Index>("speeches_ger");
+  const [indexLeft, setIndexLeft] = useState<Index>("speeches_austria");
+  const [indexRight, setIndexRight] = useState<Index>("speeches_germany");
   const [dateFilter, setDateFilter] = useState<DateFilterType>({
     fromDate: new Date(2013, 0, 1),
     toDate: new Date(2016, 0, 1),
