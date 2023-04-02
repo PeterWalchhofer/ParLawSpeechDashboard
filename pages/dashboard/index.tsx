@@ -8,6 +8,7 @@ import Head from "next/head";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Footer } from "../../dashboard/components/Footer";
+import { LoadingIndicator } from "../../dashboard/components/LoadingIndicator";
 
 import Speeches from "../../dashboard/components/Speeches";
 import { BLACK } from "../../dashboard/modules/constants";
@@ -54,6 +55,7 @@ function App() {
               </div>
               <Footer style={{ marginTop: "190px" }} />
             </Container>
+            <LoadingIndicator />
           </ThemeProvider>
         </LocalizationProvider>
       </QueryClientProvider>
