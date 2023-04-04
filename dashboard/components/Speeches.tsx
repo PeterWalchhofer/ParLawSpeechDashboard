@@ -104,7 +104,11 @@ const Speeches = () => {
             <Select
               value={indexLeft}
               onChange={(e) => setIndexLeft(e.target.value as Index)}
-              style={{ color: "white", marginLeft: 10, fontSize: "1.2rem" }}
+              style={{
+                color: "white",
+                marginLeft: 10,
+                fontSize: "1.1rem",
+              }}
             >
               {Object.keys(INDEX_LABELS).map((index) => (
                 <MenuItem value={index} key={index}>
@@ -126,7 +130,7 @@ const Speeches = () => {
             <Select
               value={indexRight}
               onChange={(e) => setIndexRight(e.target.value as Index)}
-              style={{ color: "white", marginLeft: 10, fontSize: "1.2rem" }}
+              style={{ color: "white", marginLeft: 10, fontSize: "1.1rem" }}
             >
               {Object.keys(INDEX_LABELS).map((index) => (
                 <MenuItem value={index} key={index}>
