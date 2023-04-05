@@ -2,7 +2,8 @@ import { Button } from "@mui/material";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { Indices, useMiddlecatContext } from "../amcat4react";
+import { useMiddlecatContext } from "../amcat4react";
+import { link_host } from "../functions/links";
 
 const StyleWrapper = styled.div`
   display: grid;
@@ -13,8 +14,6 @@ const StyleWrapper = styled.div`
   .AuthForm {
     padding-top: 2rem;
     font-size: 0.8rem;
-  }
-  .Indices {
   }
   .LoginRedirect {
     margin: auto;
@@ -32,14 +31,13 @@ export default function Home() {
 
   const { user, AuthForm } = useMiddlecatContext();
 
-  function onSelectIndex(index: string) {
-    if (!user) return;
-    router.push(`/h/${encodeURIComponent(user.resource)}/i/${index}/query`);
-  }
-
   if (user && login_redirect) {
+    console.log(login_redirect);
     router.push(login_redirect);
     return null;
+  }
+  if (user) {
+    router.push(link_host(user.resource));
   }
 
   return (
@@ -55,8 +53,8 @@ export default function Home() {
           <div className="LoginRedirect">
             {login_redirect ? (
               <p>
-                To open <span>{decodeURIComponent(login_redirect)}</span> you
-                first need to login to <span>{login_host}</span>
+                To open <span>{login_redirect}</span> you first need to login to{" "}
+                <span>{login_host}</span>
               </p>
             ) : null}
           </div>
@@ -79,15 +77,14 @@ export default function Home() {
             </Button>
           </div>
           <div className="AuthForm">
-            <AuthForm
-              resourceFixed={login_host || undefined}
-              resourceSuggestion={
-                login_host ? undefined : "http://localhost:5000"
-              }
-            />
-          </div>
-          <div className="Indices">
-            <Indices user={user} onSelect={onSelectIndex} />
+            {user ? null : (
+              <AuthForm
+                resourceFixed={login_host || undefined}
+                resourceSuggestion={
+                  login_host ? undefined : "http://localhost/amcat"
+                }
+              />
+            )}
           </div>
         </StyleWrapper>
       </main>

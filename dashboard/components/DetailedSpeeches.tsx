@@ -18,7 +18,7 @@ import _ from "lodash";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import Highlighter from "react-highlight-words";
-import useUser from "../../hooks/useUser";
+import { useMiddlecatContext } from "../../amcat4react";
 import { usePartyAggregation } from "../api/usePartyAggregation";
 import { useQuerySpeech } from "../api/useQuerySpeech";
 import { INDEX_LABELS, PARTY_COLORS } from "../modules/constants";
@@ -53,7 +53,8 @@ export default function DetailedSpeeches({
     keywords: keywordInput,
     page,
   });
-  const user = useUser();
+  const { user } = useMiddlecatContext();
+
   const { data: totals } = usePartyAggregation({
     index,
     user,

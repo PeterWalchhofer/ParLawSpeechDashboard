@@ -40,6 +40,8 @@ services:
       - amcat4_host=http://localhost/amcat
     depends_on:
       - "db"
+    ports:
+    - 9200:9200
   db:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
     container_name: elastic7

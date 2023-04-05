@@ -3,7 +3,7 @@ import { KeyboardDoubleArrowDown } from "@mui/icons-material";
 import { IconButton, MenuItem, Select } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { useEffect, useRef, useState } from "react";
-import useUser from "../../hooks/useUser";
+import { useMiddlecatContext } from "../../amcat4react";
 import { useFrequencySearch } from "../api/useFrequencySearch";
 import { usePartyAggregation } from "../api/usePartyAggregation";
 import { useTFIDFSearch } from "../api/useTFIDFSearch";
@@ -16,7 +16,7 @@ import SpeechChart from "./SpeechChart";
 import TopKWordsChart from "./TopKWordsChart";
 
 const Speeches = () => {
-  const user = useUser();
+  const { user } = useMiddlecatContext();
   const [keywordInput, setKeywordInput] = useState(["Russland"]);
   const [indexLeft, setIndexLeft] = useState<Index>("speeches_austria");
   const [indexRight, setIndexRight] = useState<Index>("speeches_germany");

@@ -226,16 +226,10 @@
 .chevron {
   color: var(--secondary);
   padding: 0;
-  z-index: 99;
+  z-index: 10;
 }
 .chevron:hover {
   cursor: pointer;
-}
-
-/* upload */
-
-.ui.dropdown .menu {
-  max-height: 250px !important;
 }
 
 /* Aggregation */

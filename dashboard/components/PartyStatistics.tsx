@@ -2,7 +2,7 @@ import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
-import useUser from "../../hooks/useUser";
+import { useMiddlecatContext } from "../../amcat4react";
 import { usePartyAggregation } from "../api/usePartyAggregation";
 import { BLACK, hexToHsl, PartyItem, PARTY_COLORS } from "../modules/constants";
 import { DateFilterType, Index } from "../modules/types";
@@ -37,7 +37,7 @@ export function PartyStatistics({
   selectedParty,
   setSelectedParty,
 }: PartyStatisticsProps) {
-  const user = useUser();
+  const { user } = useMiddlecatContext();
   const [normalized, setNormalized] = useState<boolean>(false);
   const { data: totals } = usePartyAggregation({
     index,

@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import { Amcat, AmcatQuery } from "../../amcat4react";
-import useUser from "../../hooks/useUser";
+import { Amcat, AmcatQuery, useMiddlecatContext } from "../../amcat4react";
+import { useCurrentUserDetails } from "../../amcat4react/hooks/useCurrentUserDetails";
 import { parseKeywords } from "../modules/constants";
 import { DateFilterType, SpeechesResponse } from "../modules/types";
 
@@ -17,10 +17,11 @@ export function useQuerySpeech({
   dateFilter: DateFilterType;
   selectedParty?: string;
 }) {
-  const user = useUser();
+  const { user  } = useMiddlecatContext();
   return useQuery(
     [index, keywords, page, dateFilter, selectedParty],
     (): Promise<SpeechesResponse> => {
+      if (!user) return Promise.resolve({ speeches: [], total: 0 });
       const query: AmcatQuery = {
         queries: parseKeywords(keywords),
         filters: {
@@ -36,7 +37,7 @@ export function useQuerySpeech({
         },
       };
 
-      return Amcat.postQuery(user!, index, query, { page })
+      return Amcat.postQuery(user, index, query, { page })
         .then((res) => res.data)
         .then((data) => ({
           speeches: data.results.map((speech: any) => ({
@@ -48,3 +49,7 @@ export function useQuerySpeech({
     }
   );
 }
+function useUser() {
+  throw new Error("Function not implemented.");
+}
+
