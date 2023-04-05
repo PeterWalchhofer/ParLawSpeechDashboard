@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   web_server:
-    image: ccsamsterdam/ngincat:4.0.5
+    image: ccsamsterdam/ngincat:4.0.8
     build: ./ngincat
     container_name: ngincat
     restart: unless-stopped
@@ -9,14 +9,14 @@ services:
       - amcat-net
     environment:
       - amcat4_client=http://amcat4client:3000
-      - amcat4_host=http://amcat4:5000/
+      - amcat4_host=http://amcat4:5000
     ports:
       - 80:80 # [local port]:[container port]
     depends_on:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/amcat4client:4.0.5
+    image: ccsamsterdam/amcat4client:4.0.8
     build: ./amcat4client
     container_name: amcat4client
     restart: unless-stopped
@@ -28,7 +28,7 @@ services:
     depends_on:
       - "api"
   api:
-    image: ccsamsterdam/amcat4:4.0.5
+    image: ccsamsterdam/amcat4:4.0.8
     build: ./amcat4
     container_name: amcat4
     restart: unless-stopped

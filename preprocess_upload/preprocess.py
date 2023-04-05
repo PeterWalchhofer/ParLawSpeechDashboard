@@ -10,6 +10,31 @@ from tqdm import tqdm
 amcat = AmcatClient("http://localhost/amcat")
 amcat.login()
 
+def amcat_fieldtypes(df):
+    result = {}    
+    for column_name, dtype in zip(df.columns, df.dtypes):
+        if dtype == pl.Utf8:
+            long_text_found = False
+            for value in df[column_name]:
+                if value:
+                    if len(value) > 20:
+                        long_text_found = True
+                        break
+
+            if long_text_found:
+                result[column_name] = 'text'
+            else:
+                result[column_name] = 'keyword'
+        elif dtype == pl.Boolean:
+            result[column_name] = 'keyword'
+        elif dtype == pl.Int32 or dtype == pl.Int64:
+            result[column_name] = 'double'
+        elif dtype == pl.Date:
+            result[column_name] = 'date'
+        else:
+            result[column_name] = 'object'
+    
+    return result
 
 def get_df(path):
     # df = pyreadr.read_r(path)[None]
@@ -96,7 +121,8 @@ def preprocess_and_upload(country):
     del speeches
     amcat.create_index(f"speeches_{country}")
     amcat.set_fields(f"speeches_{country}", {"party": "keyword"})
-    amcat.upload_documents(f"speeches_{country}", speeches_tftidf)
+    print("Uploading speeches to AmCAT")
+    amcat.upload_documents(f"speeches_{country}", speeches_tftidf, columns=amcat_fieldtypes(speeches_tftidf))
 
 
 if __name__ == "__main__":

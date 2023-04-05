@@ -6,3 +6,4 @@ numpy==1.24.2
 polars==0.16.17
 scikit-learn==1.2.2
 tqdm==4.65.0
+git+https://github.com/ccs-amsterdam/amcat4py
