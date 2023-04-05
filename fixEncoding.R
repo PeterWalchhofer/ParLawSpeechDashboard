@@ -1,4 +1,5 @@
-install.packages("tidyverse")
+if (!"tidyverse" %in% rownames(installed.packages()))
+  install.packages("tidyverse")
 library("tidyverse")
 # Retrieve the filename from the command line argument
 args <- commandArgs(trailingOnly = TRUE)
