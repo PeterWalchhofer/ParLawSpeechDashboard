@@ -17,7 +17,7 @@ pip install -r requirements.txt
 ## Run AmCat4
 
 ```
-docker-compose up --pull="missing" 
+docker-compose up --pull="missing" -d
 ```
 
 # Upload 
