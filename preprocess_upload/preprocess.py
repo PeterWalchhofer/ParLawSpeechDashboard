@@ -18,7 +18,7 @@ def amcat_fieldtypes(df):
             long_text_found = False
             for value in df[column_name]:
                 if value:
-                    if len(value) > 20:
+                    if len(value) > 50:
                         long_text_found = True
                         break
 
@@ -119,14 +119,16 @@ def preprocess_and_upload(country):
         amcat.delete_index(f"speeches_{country}")
     except:
         pass
-    columns = amcat_fieldtypes(speeches)    
+    columns = amcat_fieldtypes(speeches)
     columns["term_tfidf"]  = "text"
     del speeches
 
-    amcat.create_index(f"speeches_{country}")
-    amcat.set_fields(f"speeches_{country}", {"party": "keyword"})
+    # create index and set field types
+    amcat.create_index(f"speeches_{country}", guest_role="admin")
+    amcat.set_fields(f"speeches_{country}", columns)
+
     print("Uploading speeches to AmCAT")
-    amcat.upload_documents(f"speeches_{country}", speeches_tftidf,columns=columns)
+    amcat.upload_documents(f"speeches_{country}", speeches_tftidf)
 
 
 if __name__ == "__main__":
