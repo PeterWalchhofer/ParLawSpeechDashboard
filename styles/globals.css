@@ -6,6 +6,10 @@
   --gap: 0.5em;
   --rounding: 24px;
 }
+div.wordCloud > div > svg  {
+  width: 100%;
+  height: 100%;
+}
 
 @media (prefers-color-scheme: dark) {
   .amcat4:root {
@@ -292,4 +296,6 @@
   .aggregateoptions .label {
     flex: 0 0 auto;
   }
+
+
 }

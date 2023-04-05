@@ -28,14 +28,16 @@ export default function SpeechWordCloud({
       sd(chosenSpeech.term_tfidf.map((item: any) => item.value * 5000)),
     [chosenSpeech.term_tfidf]
   );
-  console.log(dataMemo);
+
   return (
+<div className="wordCloud">
     <WordCloud
       width={300}
-      height={400}
+      height={450}
       rotate={rotateFn}
       data={dataMemo}
       // fontWeight={fontWeightFn}
     />
+</div>
   );
 }
