@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   web_server:
-    image: ccsamsterdam/ngincat:4.0.8
+    image: ccsamsterdam/ngincat:4.0.12
     build: ./ngincat
     container_name: ngincat
     restart: unless-stopped
@@ -16,7 +16,7 @@ services:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/amcat4client:4.0.8
+    image: ccsamsterdam/amcat4client:4.0.12
     build: ./amcat4client
     container_name: amcat4client
     restart: unless-stopped
@@ -28,7 +28,7 @@ services:
     depends_on:
       - "api"
   api:
-    image: ccsamsterdam/amcat4:4.0.8
+    image: ccsamsterdam/amcat4:4.0.12
     build: ./amcat4
     container_name: amcat4
     restart: unless-stopped
@@ -40,8 +40,6 @@ services:
       - amcat4_host=http://localhost/amcat
     depends_on:
       - "db"
-    ports:
-    - 9200:9200
   db:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
     container_name: elastic7
