@@ -10,8 +10,9 @@ from tqdm import tqdm
 amcat = AmcatClient("http://localhost/amcat")
 amcat.login()
 
+
 def amcat_fieldtypes(df):
-    result = {}    
+    result = {}
     for column_name, dtype in zip(df.columns, df.dtypes):
         if dtype == pl.Utf8:
             long_text_found = False
@@ -33,15 +34,15 @@ def amcat_fieldtypes(df):
             result[column_name] = 'date'
         else:
             result[column_name] = 'object'
-    
+
     return result
+
 
 def get_df(path):
     # df = pyreadr.read_r(path)[None]
-    df = pl.read_csv(path, parse_dates=True)
+    df = pl.read_csv(path, try_parse_dates=True)
     df = df.with_columns(
         [
-            col("date").dt.year().alias("year"),
             pl.format(
                 "Speech by {} from {}: {}...",
                 col("speaker"),
@@ -71,7 +72,8 @@ def compute_tf_idf(df, lang):
         speeches_term_tfidf.append(speech_tfidf)
     # speeches_term_tfidf to json
     speeches_term_tfidf_json = [json.dumps(x) for x in speeches_term_tfidf]
-    df_new = df.with_columns([pl.Series(speeches_term_tfidf_json).alias("term_tfidf")])
+    df_new = df.with_columns(
+        [pl.Series(speeches_term_tfidf_json).alias("term_tfidf")])
     return df_new
 
 
@@ -94,7 +96,6 @@ def compute_tf_idf(df, lang):
         speech_tfidf = json.dumps(speech_tfidf)
         speech_dict = df[i].to_dicts()[0]
         speech_dict["term_tfidf"] = speech_tfidf
-        # print(speech_dict)
         yield speech_dict
 
 
@@ -118,11 +119,14 @@ def preprocess_and_upload(country):
         amcat.delete_index(f"speeches_{country}")
     except:
         pass
+    columns = amcat_fieldtypes(speeches)    
+    columns["term_tfidf"]  = "text"
     del speeches
+
     amcat.create_index(f"speeches_{country}")
     amcat.set_fields(f"speeches_{country}", {"party": "keyword"})
     print("Uploading speeches to AmCAT")
-    amcat.upload_documents(f"speeches_{country}", speeches_tftidf, columns=amcat_fieldtypes(speeches_tftidf))
+    amcat.upload_documents(f"speeches_{country}", speeches_tftidf,columns=columns)
 
 
 if __name__ == "__main__":
