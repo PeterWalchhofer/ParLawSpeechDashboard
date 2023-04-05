@@ -12,7 +12,7 @@ export  type SpeechesResponse = {
       staatsminister: boolean
       speech_ID: string
       agenda: string
-      term_tfidf: string
+      term_tfidf: {term: string, value: number}[]
       speaker: string
       speaker_raw: string
       year: number

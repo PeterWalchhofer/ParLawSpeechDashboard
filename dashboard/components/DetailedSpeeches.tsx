@@ -68,7 +68,7 @@ export default function DetailedSpeeches({
   const highlightWords = highlightTfIdf
     ? speeches?.speeches[chosenSpeech]?.term_tfidf
         .slice(0, 20)
-        .map((word: any) => word.term)
+        .map((word) => word.term)
     : keywordInput;
 
   return (
@@ -222,7 +222,7 @@ export default function DetailedSpeeches({
                 <p>
                   <Highlighter
                     textToHighlight={speeches.speeches[chosenSpeech]?.text}
-                    searchWords={highlightWords}
+                    searchWords={highlightWords || keywordInput}
                     highlightStyle={{
                       backgroundColor: "white",
                       color: "black",
