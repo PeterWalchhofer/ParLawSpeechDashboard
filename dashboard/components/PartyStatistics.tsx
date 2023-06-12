@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMiddlecatContext } from "../../amcat4react";
 import { usePartyAggregation } from "../api/usePartyAggregation";
-import { BLACK, hexToHsl, PartyItem, PARTY_COLORS } from "../modules/constants";
+import { BLACK, PARTY_COLORS, PartyItem, hexToHsl } from "../modules/constants";
 import { DateFilterType, Index } from "../modules/types";
 
 type PartyStatisticsProps = {

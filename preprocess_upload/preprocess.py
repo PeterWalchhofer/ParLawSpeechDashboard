@@ -112,23 +112,24 @@ def compute_tf_idf(df, lang):
 @click.argument("country")
 def preprocess_and_upload(country):
     print("Preprocessing and uploading speeches for", country)
-    country = country.lower()
     speeches = get_df(f"data/{country}/Corpus_speeches_{country}.RDS.csv")
     speeches_tftidf = compute_tf_idf(speeches, country)
+    index_name = f"speeches_{country}".lower()
     try:
-        amcat.delete_index(f"speeches_{country}")
+        amcat.delete_index(index_name)
     except:
         pass
     columns = amcat_fieldtypes(speeches)
     columns["term_tfidf"]  = "text"
+    columns["party"] = "keyword"
     del speeches
 
     # create index and set field types
-    amcat.create_index(f"speeches_{country}", guest_role="admin")
-    amcat.set_fields(f"speeches_{country}", columns)
+    amcat.create_index(index_name, guest_role="admin")
+    amcat.set_fields(index_name, columns)
 
     print("Uploading speeches to AmCAT")
-    amcat.upload_documents(f"speeches_{country}", speeches_tftidf)
+    amcat.upload_documents(index_name, speeches_tftidf, chunk_size=10000)
 
 
 if __name__ == "__main__":
