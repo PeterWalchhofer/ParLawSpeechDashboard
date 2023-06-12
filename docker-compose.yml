@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   web_server:
-    image: ccsamsterdam/ngincat:4.0.12
+    image: ccsamsterdam/ngincat:4.0.13
     build: ./ngincat
     container_name: ngincat
     restart: unless-stopped
@@ -16,7 +16,7 @@ services:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/amcat4client:4.0.12
+    image: ccsamsterdam/amcat4client:4.0.13
     build: ./amcat4client
     container_name: amcat4client
     restart: unless-stopped
@@ -28,7 +28,7 @@ services:
     depends_on:
       - "api"
   api:
-    image: ccsamsterdam/amcat4:4.0.12
+    image: ccsamsterdam/amcat4:4.0.13
     build: ./amcat4
     container_name: amcat4
     restart: unless-stopped
@@ -55,11 +55,21 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - xpack.security.enabled=false
-    # your database should have a folder on the host machine to permanently store data
-    # run: `mkdir -p /path/to/elastic-data && sudo chown -R 1000:1000 ~/.elasticsearch/database`
-    # to make it accessible for docker. Then uncomment the lines below (using a real path)
+    # your database should have a folder on the host machine to permanently store data. By default
+    # a docker volume is used, which leaves management of the files to Docker 
+    # (see https://docs.docker.com/storage/volumes/). You can also store files somewhere else with
+    # (for example):
+    #
     # volumes:
     #   - /path/to/elastic-data:/usr/share/elasticsearch/data # [local path]:[container path]
+    # 
+    # In this case, you need to make sure that the folder `/path/to/elastic-data` exists and Docker
+    # has read and write access to it.
+    volumes:
+      - elastic-volume:/usr/share/elasticsearch/data:rw
 
 networks:
   amcat-net:
+
+volumes:
+     elastic-volume:
