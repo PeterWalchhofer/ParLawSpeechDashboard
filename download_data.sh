@@ -1,10 +1,24 @@
 #!/bin/bash
 
-# Define array of country-data_url pairs
-declare -A country_data_urls=(
-  ["austria"]="PASTE_AUSTRIA"
-  ["germany"]="PASTE_GERMANY"
- )
+# Read the data urls from a plain text file
+# text file format:
+# country=url_to_file
+
+filename="data.txt"
+
+echo >> $filename
+
+
+if [ ! -f "$filename" ]; then
+  echo "File $filename does not exist."
+  exit 1
+fi
+
+declare -A country_data_urls
+
+while IFS='=' read -r key value; do
+  country_data_urls["$key"]="$value"
+done < data.txt
 
 # Iterate through the array
 for country in "${!country_data_urls[@]}"; do
