@@ -42,6 +42,9 @@ def get_df(path):
     # df = pyreadr.read_r(path)[None]
     df = pl.read_csv(path, try_parse_dates=True)
     df = df.with_columns(
+        pl.col('speaker').fill_null("")
+    )
+    df = df.with_columns(
         [
             pl.format(
                 "Speech by {} from {}: {}...",
@@ -54,27 +57,27 @@ def get_df(path):
     return df
 
 
-def compute_tf_idf(df, lang):
-    vectorizer = SpeechWordCloudMaker(df, lang=lang)
-    matrix = vectorizer.vec.transform(df["text"])
+# def compute_tf_idf(df, lang):
+#     vectorizer = SpeechWordCloudMaker(df, lang=lang)
+#     matrix = vectorizer.vec.transform(df["text"])
 
-    speeches_term_tfidf = []
-    # iterate row-wise
-    for i in tqdm(range(matrix.shape[0])):
-        _, col_indices = matrix[i, :].nonzero()
-        speech_tfidf = []
+#     speeches_term_tfidf = []
+#     # iterate row-wise
+#     for i in tqdm(range(matrix.shape[0])):
+#         _, col_indices = matrix[i, :].nonzero()
+#         speech_tfidf = []
 
-        for j in range(len(col_indices)):
-            value = matrix[i, col_indices[j]]
-            term = vectorizer.feature_names[col_indices[j]]
-            speech_tfidf.append({"term": term, "value": value})
-        speech_tfidf.sort(key=lambda x: x["value"], reverse=True)
-        speeches_term_tfidf.append(speech_tfidf)
-    # speeches_term_tfidf to json
-    speeches_term_tfidf_json = [json.dumps(x) for x in speeches_term_tfidf]
-    df_new = df.with_columns(
-        [pl.Series(speeches_term_tfidf_json).alias("term_tfidf")])
-    return df_new
+#         for j in range(len(col_indices)):
+#             value = matrix[i, col_indices[j]]
+#             term = vectorizer.feature_names[col_indices[j]]
+#             speech_tfidf.append({"term": term, "value": value})
+#         speech_tfidf.sort(key=lambda x: x["value"], reverse=True)
+#         speeches_term_tfidf.append(speech_tfidf)
+#     # speeches_term_tfidf to json
+#     speeches_term_tfidf_json = [json.dumps(x) for x in speeches_term_tfidf]
+#     df_new = df.with_columns(
+#         [pl.Series(speeches_term_tfidf_json).alias("term_tfidf")])
+#     return df_new
 
 
 def compute_tf_idf(df, lang):
@@ -82,7 +85,6 @@ def compute_tf_idf(df, lang):
     vectorizer = SpeechWordCloudMaker(df, lang=lang)
     matrix = vectorizer.vec.transform(df["text"])
     print("Done computing TF-IDF")
-    print("Upload speeches to AmCAT")
     # iterate row-wise
     for i in tqdm(range(matrix.shape[0])):
         _, col_indices = matrix[i, :].nonzero()
