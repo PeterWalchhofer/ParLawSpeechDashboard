@@ -37,6 +37,6 @@ next-env.d.ts
 
 # python
 *.pyc
-
+.venv/
 #data
 data/
