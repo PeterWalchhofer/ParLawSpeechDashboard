@@ -1,6 +1,4 @@
-if (!"tidyverse" %in% rownames(installed.packages()))
-  install.packages("tidyverse")
-library("tidyverse")
+library(stringr)
 # Retrieve the filename from the command line argument
 args <- commandArgs(trailingOnly = TRUE)
 filename <- args[1]
@@ -11,7 +9,7 @@ speeches_fixed <- data.frame(speeches)
 
 for (col in colnames(speeches_fixed)) {
   if (typeof(speeches_fixed[[col]]) != "character") {next}
-    vec_encoding <- Encoding(speeches_fixed[[col]]) %>% unique() %>% str_subset("unknown", negate=TRUE)
+    vec_encoding <- Encoding(speeches_fixed[[col]]) |> unique() |> stringr::str_subset("unknown", negate=TRUE)
     if (length(vec_encoding) == 0 || (length(vec_encoding) == 1 && vec_encoding[1] == "UTF-8")) {
       # Skip if all unknown or UTF-8
       next
