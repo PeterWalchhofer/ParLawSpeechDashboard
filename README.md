@@ -21,6 +21,7 @@ docker-compose up --pull="missing" -d
 ```
 
 # Upload 
+
 ### All data
 ```
 ls data | xargs -I {} python preprocess_upload/preprocess.py {}
@@ -59,4 +60,65 @@ Next doesn't check typescript in dev mode, so remember to build every now and th
 
 ```
 npm run build
+```
+
+# Linux Server (Ubuntu)
+
+Required packages
+
+```bash
+sudo apt install unzip curl ca-certificates curl gnupg
+```
+
+## R Installation
+
+Add public key and repository:
+
+```
+wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sudo tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+```
+
+install R with dependencies:
+
+```
+sudo apt install libxml2-dev g++ libcurl4-openssl-dev r-base-dev r-base 
+```
+
+Install R packages with `rpackages.r`
+
+
+## Docker
+
+See [official documentation](https://docs.docker.com/engine/install/ubuntu/)
+
+Get GPG keys
+
+```
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+```
+
+Add repository to apt:
+
+```
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+Install docker and docker compose (latest version based on Go)
+
+```
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Test installation
+
+```
+sudo docker run hello-world
+docker compose version
 ```
