@@ -48,19 +48,20 @@ flask --app flask/app --debug run
 ```
 # NextJS Frontent
 
-First install stuff.
+1 First install stuff.
 
 ```
 npm i
 ```
+2 Rename `.env` to `.env.local`
 
-Run locally for development.
+3 Run locally for development.
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 Next doesn't check typescript in dev mode, so remember to build every now and then to see if you're still cool with the TS gods.
 
