@@ -2,11 +2,15 @@ import json
 import requests
 from flask import Flask, request
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+cors_address = os.environ.get("ParLawSpeechDashboard_CORS", "http://localhost:3000")
+es_address = os.environ.get("ParLawSpeechDashboard_ES", "http://localhost:9200")
+CORS(app, resources={r"/*": {"origins": cors_address}})
 app.config["CORS_HEADERS"] = "Content-Type"
-
+print(f"cors_address: {cors_address}")
+print(f"es_address: {es_address}")
 
 @app.route("/significant_word/<string:index>", methods=["POST"])
 def get_significant_words(index):
@@ -15,7 +19,7 @@ def get_significant_words(index):
     to_date = request.json["toDate"]
     keywords = request.json["keywords"]
 
-    url = f"http://localhost:9200/{index}/_search"
+    url = f"{es_address}/{index}/_search"
     query = {
         "query": {
             "bool": {

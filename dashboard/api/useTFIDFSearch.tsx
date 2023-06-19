@@ -12,7 +12,7 @@ export function useTFIDFSearch({
   index: Index;
 }) {
   return useQuery([index, dateFilter, keywords], (): Promise<TFIDFResponse> => {
-    return fetch(`http://localhost:5000/significant_word/${index}`, {
+    return fetch(`${process.env.NEXT_PUBLIC_FLASK_HOST}/significant_word/${index}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
