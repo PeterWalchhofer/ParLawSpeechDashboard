@@ -7,10 +7,6 @@ from polars import col
 from speech_service import SpeechWordCloudMaker
 from tqdm import tqdm
 
-amcat = AmcatClient("http://localhost/amcat")
-amcat.login()
-
-
 def amcat_fieldtypes(df):
     result = {}
     for column_name, dtype in zip(df.columns, df.dtypes):
@@ -103,18 +99,20 @@ def compute_tf_idf(df, lang):
 
 @click.command(
     help="Preprocess and upload speeches to AmCAT. "
-    "The speeches should be in a folder called 'data' in the same directory as this script. "
-    "The folder should contain a folder for each country, "
-    "which should contain a file called 'Corpus_speeches_{country}-fixed.RDS'. "
+    "The speeches should be in a folder and should contain a folder for each country, "
+    "which should contain a file called 'Corpus_speeches_{country}.RDS.csv'. "
     "The script will create a new index in AmCAT called 'speeches_{country}'. "
     "The index will have a field called 'party' of type 'keyword'. "
-    "The script will also create a pickle file called '{country}_vec.pkl' "
-    "which contains the TF-IDF vectorizer for faster re-execution. "
 )
-@click.argument("country")
-def preprocess_and_upload(country):
+@click.argument("country", required=True)
+@click.option("--path", default="data", help="Path to the data folder")
+@click.option("--amcat-host", default="http://localhost/amcat", help="AmCAT host")
+def preprocess_and_upload(country, path, amcat_host):
     print("Preprocessing and uploading speeches for", country)
-    speeches = get_df(f"data/{country}/Corpus_speeches_{country}.RDS.csv")
+    
+    amcat = AmcatClient(amcat_host)
+    amcat.login()
+    speeches = get_df(f"{path}/{country}/Corpus_speeches_{country}.RDS.csv")
     speeches_tftidf = compute_tf_idf(speeches, country)
     index_name = f"speeches_{country}".lower()
     try:
@@ -131,7 +129,7 @@ def preprocess_and_upload(country):
     amcat.set_fields(index_name, columns)
 
     print("Uploading speeches to AmCAT")
-    amcat.upload_documents(index_name, speeches_tftidf, chunk_size=10000)
+    amcat.upload_documents(index_name, speeches_tftidf, chunk_size=5000)
 
 
 if __name__ == "__main__":

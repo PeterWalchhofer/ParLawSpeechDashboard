@@ -33,6 +33,12 @@ ls data | xargs -I {} python preprocess_upload/preprocess.py {}
 python preprocess_upload/preprocess.py austria
 ```
 
+One can specify CLI options, see `python preprocess_upload/preprocess.py --help` for details.
+
+```
+python preprocess_upload/preprocess.py --path data --amcat-host http://localhost/amcat CZ
+```
+
 
 # Flask App
 
