@@ -63,3 +63,8 @@ def get_significant_words(index):
     agg = {k: v / tf[k] for k, v in agg.items()}
     agg = sorted(agg.items(), key=lambda x: x[1], reverse=True)[:k]
     return agg
+
+@app.route("/test", methods=["GET"])
+def test():
+    return "Hello World!"
+    

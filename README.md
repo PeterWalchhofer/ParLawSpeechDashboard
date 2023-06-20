@@ -40,15 +40,9 @@ python preprocess_upload/preprocess.py --path data --amcat-host http://localhost
 ```
 
 
-# Flask App
 
-Significant words aggregation unfortunately requires a flask app running. To run it:
-```
-flask --app flask/app --debug run
-```
-If you want to specify the AmCAT host and the ElasticSearch path use `ParLawSpeechDashboard_ES` `ParLawSpeechDashboard_CORS` as environment variables.
 # NextJS Frontent
-
+OPTIONAL: should be run with docker-compose at port 3000
 1 First install stuff.
 
 ```

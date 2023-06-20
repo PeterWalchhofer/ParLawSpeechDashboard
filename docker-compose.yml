@@ -67,7 +67,32 @@ services:
     # has read and write access to it.
     volumes:
       - elastic-volume:/usr/share/elasticsearch/data:rw
+  flask:
+    build:
+      context: ./flask  
+      dockerfile: Dockerfile
+    container_name: flask
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    ports:
+      - 5000:5000  # [local port]:[container port]
+    environment:
+      - ParLawSpeechDashboard_CORS=http://localhost:3000 # TODO
+      - ParLawSpeechDashboard_ES=http://elastic7:9200
 
+  dashboard: #nextjs frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dashboard
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    ports:
+      - 3000:3000  # [local port]:[container port]
+    environment:
+      - NEXT_PUBLIC_FLASK_HOST=http://flask:5000
 networks:
   amcat-net:
 
