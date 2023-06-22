@@ -1,0 +1,104 @@
+version: "3.8"
+services:
+  # use existing nginx on server
+  # web_server:
+  #   image: ccsamsterdam/ngincat:4.0.13
+  #   build: ./ngincat
+  #   container_name: ngincat
+  #   restart: unless-stopped
+  #   networks:
+  #     - amcat-net
+  #   environment:
+  #     - amcat4_client=http://amcat4client:3000
+  #     - amcat4_host=http://amcat4:5000
+  #   ports:
+  #     - 3001:80 # [local port]:[container port]
+  #   depends_on:
+  #     - "web_client"
+  #     - "api"
+  web_client:
+    image: ccsamsterdam/amcat4client:4.0.13
+    build: ./amcat4client
+    container_name: amcat4client
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    environment:
+      # this can be changed later, it is just the suggested default
+      - amcat4_host=https://parliaments.opted.eu/api/
+    depends_on:
+      - "api"
+  api:
+    image: ccsamsterdam/amcat4:4.0.13
+    build: ./amcat4
+    container_name: amcat4
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    ports:
+      - 2023:5000
+    environment:
+      # note that these take precedence over values set in `amcat4 config``
+      - amcat4_elastic_host=http://elastic7:9200
+      - amcat4_host=https://parliaments.opted.eu/api/
+    depends_on:
+      - "db"
+  db:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+    container_name: elastic7
+    restart: unless-stopped
+    # for security reasons, the database is only exposed to the other containers in the amcat-net network
+    # If you want to be able to access it locally, uncomment the following two lines
+    ports:
+    - 9200:9200
+    networks:
+      - amcat-net
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms8g -Xmx8g"
+      - xpack.security.enabled=false
+    # your database should have a folder on the host machine to permanently store data. By default
+    # a docker volume is used, which leaves management of the files to Docker 
+    # (see https://docs.docker.com/storage/volumes/). You can also store files somewhere else with
+    # (for example):
+    #
+    # volumes:
+    #   - /path/to/elastic-data:/usr/share/elasticsearch/data # [local path]:[container path]
+    # 
+    # In this case, you need to make sure that the folder `/path/to/elastic-data` exists and Docker
+    # has read and write access to it.
+    volumes:
+      - amcat-storage:/usr/share/elasticsearch/data:rw
+  flask:
+    build:
+      context: ./flask  
+      dockerfile: Dockerfile
+    container_name: flask
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    ports:
+      - 5000:5000  # [local port]:[container port]
+    environment:
+      - ParLawSpeechDashboard_CORS=https://parliaments.opted.eu
+      - ParLawSpeechDashboard_ES=http://elastic7:9200
+
+  dashboard: #nextjs frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dashboard
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    ports:
+      - 3000:3000  # [local port]:[container port]
+    environment:
+      # - NEXT_PUBLIC_FLASK_HOST=http://flask:5000
+      - NEXT_PUBLIC_FLASK_HOST=https://parliaments.opted.eu
+networks:
+  amcat-net:
+
+volumes:
+  amcat-storage:
