@@ -5,14 +5,12 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { MiddlecatWrapper, useMiddlecatContext } from "../amcat4react";
+import { MiddlecatWrapper } from "../amcat4react";
 
 import ParLawSpeech from "../dashboard/components/ParLawSpeech";
-import { BLACK } from "../dashboard/modules/constants";
-import { link_host } from "../functions/links";
+import { Layout } from "../dashboard/components/Layout";
 
 // document.body.style.backgroundColor = "#000000f2";
 const darkTheme = createTheme({
@@ -20,23 +18,24 @@ const darkTheme = createTheme({
     mode: "dark",
   },
 });
-const queryClient = new QueryClient();
+
 function App() {
   useEffect(() => {
     document.title = "ParlSpeechTracker";
   }, []);
-  const [queryClient] = useState(() => new QueryClient());
-
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
 
   return (
-    <div
-      style={{
-        backgroundColor: BLACK,
-        height: "100%",
-        paddingBottom: 300,
-        color: "fff",
-      }}
-    >
+    <div>
       <Head>
         <link rel="icon" href="/favicon.png" />
       </Head>
@@ -45,7 +44,9 @@ function App() {
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <ThemeProvider theme={darkTheme}>
               <CssBaseline />
-              <ParLawSpeech />
+              <Layout>
+                <ParLawSpeech />
+              </Layout>
             </ThemeProvider>
           </LocalizationProvider>
         </MiddlecatWrapper>
