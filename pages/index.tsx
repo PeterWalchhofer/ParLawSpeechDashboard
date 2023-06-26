@@ -1,93 +1,57 @@
-import { Button } from "@mui/material";
+import "fomantic-ui-css/semantic.min.css";
+
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import styled from "styled-components";
-import { useMiddlecatContext } from "../amcat4react";
+import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { MiddlecatWrapper, useMiddlecatContext } from "../amcat4react";
+
+import ParLawSpeech from "../dashboard/components/ParLawSpeech";
+import { BLACK } from "../dashboard/modules/constants";
 import { link_host } from "../functions/links";
 
-const StyleWrapper = styled.div`
-  display: grid;
-  grid-gap: 2rem;
-  grid-template-columns: 1fr;
-  //grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+// document.body.style.backgroundColor = "#000000f2";
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
+const queryClient = new QueryClient();
+function App() {
+  useEffect(() => {
+    document.title = "ParlSpeechTracker";
+  }, []);
+  const [queryClient] = useState(() => new QueryClient());
 
-  .AuthForm {
-    padding-top: 2rem;
-    font-size: 0.8rem;
-  }
-  .LoginRedirect {
-    margin: auto;
-
-    span {
-      font-weight: bold;
-    }
-  }
-`;
-
-export default function Home() {
-  const router = useRouter();
-  const login_host = router.query.login_host as string;
-  const login_redirect = router.query.login_redirect as string;
-
-  const { user, AuthForm } = useMiddlecatContext();
-
-  if (user && login_redirect) {
-    console.log(login_redirect);
-    router.push(login_redirect);
-    return null;
-  }
-  if (user) {
-    router.push(link_host(user.resource));
-  }
 
   return (
-    <>
+    <div
+      style={{
+        backgroundColor: BLACK,
+        height: "100%",
+        paddingBottom: 300,
+        color: "fff",
+      }}
+    >
       <Head>
-        <title>AmCAT 4 client</title>
-        <meta name="description" content="AmCAT 4 client" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <main>
-        <StyleWrapper>
-          <div className="LoginRedirect">
-            {login_redirect ? (
-              <p>
-                To open <span>{login_redirect}</span> you first need to login to{" "}
-                <span>{login_host}</span>
-              </p>
-            ) : null}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Button
-              variant="outlined"
-              style={{
-                fontSize: "1.5rem",
-                color: "green",
-                borderColor: "green",
-              }}
-              onClick={() => router.push("/dashboard")}
-            >
-              Dashboard
-            </Button>
-          </div>
-          <div className="AuthForm">
-            {user ? null : (
-              <AuthForm
-                resourceFixed={login_host || undefined}
-                resourceSuggestion={
-                  login_host ? undefined : "http://localhost/amcat"
-                }
-              />
-            )}
-          </div>
-        </StyleWrapper>
-      </main>
-    </>
+      <QueryClientProvider client={queryClient}>
+        <MiddlecatWrapper loginRoute="/" bff="/api/bffAuth">
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <ThemeProvider theme={darkTheme}>
+              <CssBaseline />
+              <ParLawSpeech />
+            </ThemeProvider>
+          </LocalizationProvider>
+        </MiddlecatWrapper>
+      </QueryClientProvider>
+    </div>
   );
 }
+
+export default App;

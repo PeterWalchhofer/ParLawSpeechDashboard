@@ -32,6 +32,7 @@ const Search = ({ values, setValue, handleFetch }: SearchType) => {
           style={{ marginTop: "5px" }}
           fontSize={"1.2rem"}
           variant="caption"
+          color="textPrimary"
         >
           ParlSpeechTracker
         </Typography>
