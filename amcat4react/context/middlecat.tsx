@@ -13,6 +13,9 @@ interface ContextProps {
   loading: boolean;
   AuthForm: any;
   loginRoute: string | null;
+  signInGuest:
+    | null
+    | ((resource: string, name: string, authDisabled: boolean) => void);
 }
 
 export const MiddlecatContext = createContext<ContextProps>({
@@ -20,6 +23,7 @@ export const MiddlecatContext = createContext<ContextProps>({
   loading: false,
   AuthForm: null,
   loginRoute: null,
+  signInGuest: null,
 });
 
 interface Props {
@@ -46,10 +50,15 @@ export function MiddlecatWrapper({
     bff,
   };
 
-  const { user, loading, AuthForm } = useMiddlecat(useMiddlecatProps);
+  const { user, loading, AuthForm, signInGuest } =
+    useMiddlecat(useMiddlecatProps);
 
   return (
-    <MiddlecatContext.Provider value={{ user, loading, AuthForm, loginRoute }}>{children}</MiddlecatContext.Provider>
+    <MiddlecatContext.Provider
+      value={{ user, loading, AuthForm, loginRoute, signInGuest }}
+    >
+      {children}
+    </MiddlecatContext.Provider>
   );
 }
 

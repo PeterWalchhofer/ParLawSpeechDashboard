@@ -38,6 +38,7 @@ services:
       # note that these take precedence over values set in `amcat4 config``
       - amcat4_elastic_host=http://elastic7:9200
       - amcat4_host=http://localhost/amcat
+      - amcat4_auth=allow_guests
     depends_on:
       - "db"
   db:

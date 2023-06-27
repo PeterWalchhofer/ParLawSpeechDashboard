@@ -1,6 +1,5 @@
 import "fomantic-ui-css/semantic.min.css";
 
-import useMiddlecat from "middlecat-react";
 import { useEffect } from "react";
 import { useMiddlecatContext } from "../../amcat4react";
 import { LoadingIndicator } from "./LoadingIndicator";
@@ -10,13 +9,12 @@ function ParLawSpeech() {
   useEffect(() => {
     document.title = "ParlSpeechTracker";
   }, []);
-  const { user } = useMiddlecatContext();
-  const { signInGuest } = useMiddlecat();
+  const { user, signInGuest } = useMiddlecatContext();
 
   useEffect(() => {
     if (user) return;
     const hostEnv = process.env.NEXT_PUBLIC_AMCAT_HOST;
-    signInGuest("http://localhost/amcat", "ParLawSpeech", true);
+    signInGuest?.(hostEnv || "http://localhost/amcat", "", false);
   }, [user]);
 
   return (
