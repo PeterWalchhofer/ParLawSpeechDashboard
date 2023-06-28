@@ -1,7 +1,8 @@
 "use client";
-import { Square } from "@mui/icons-material";
+import { Search, Square, Clear } from "@mui/icons-material";
 import {
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Paper,
@@ -44,6 +45,8 @@ export default function DetailedSpeeches({
 }: DetailedSpeechesProps) {
   const [chosenSpeech, setChosenSpeech] = useState<number>(0);
   const [showWordCloud, setShowWordCloud] = useState<boolean>(false);
+  const [speakerInput, setSpeakerInput] = useState<string>("");
+  const [speakerFilter, setSpeakerFilter] = useState<string | undefined>();
   const [page, setPage] = useState(0);
   const [highlightTfIdf, setHighlightTfIdf] = useState<boolean>(false);
   const { data: speeches } = useQuerySpeech({
@@ -52,6 +55,7 @@ export default function DetailedSpeeches({
     selectedParty,
     keywords: keywordInput,
     page,
+    speakerFilter,
   });
   const { user } = useMiddlecatContext();
 
@@ -64,6 +68,10 @@ export default function DetailedSpeeches({
   useEffect(() => {
     setPage(0);
   }, [dateFilter, index, selectedParty]);
+
+  useEffect(() => {
+    setSpeakerInput(speakerFilter || "");
+  }, [speakerFilter]);
 
   const highlightWords = highlightTfIdf
     ? speeches?.speeches[chosenSpeech]?.term_tfidf
@@ -90,6 +98,7 @@ export default function DetailedSpeeches({
       <Grid2 xs={12} container>
         <Grid2>
           <DatePicker
+            InputProps={{ style: { width: "160px" } }}
             label="From"
             value={moment(dateFilter.fromDate)}
             onChange={(newValue) => {
@@ -101,6 +110,7 @@ export default function DetailedSpeeches({
         </Grid2>
         <Grid2>
           <DatePicker
+            InputProps={{ style: { width: "160px" } }}
             label="To"
             value={moment(dateFilter.toDate)}
             onChange={(newValue) =>
@@ -123,6 +133,7 @@ export default function DetailedSpeeches({
                 labelId="test-select-label"
                 size="small"
                 label="Party"
+                style={{ height: "37px" }}
                 notched={true}
                 // style={{ color: "white", marginLeft: 10, fontSize: "1.2rem" }}
               >
@@ -147,6 +158,38 @@ export default function DetailedSpeeches({
             </FormControl>
           )}
         </Grid2>
+        <Grid2>
+          <TextField
+            label="Speaker"
+            size="small"
+            value={speakerInput}
+            onChange={(e) => setSpeakerInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setSpeakerFilter(speakerInput || undefined);
+              }
+            }}
+            InputProps={{
+              endAdornment: (
+                <>
+                  <IconButton
+                    onClick={() => {
+                      setSpeakerInput("");
+                      setSpeakerFilter(undefined);
+                    }}
+                  >
+                    <Clear />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => setSpeakerFilter(speakerInput || undefined)}
+                  >
+                    <Search />
+                  </IconButton>
+                </>
+              ),
+            }}
+          />
+        </Grid2>
       </Grid2>
 
       {speeches && (
@@ -159,6 +202,8 @@ export default function DetailedSpeeches({
               chosenSpeech={chosenSpeech}
               setChosenSpeech={setChosenSpeech}
               index={index}
+              setSpeakerFilter={setSpeakerFilter}
+              setPartyFilter={setSelectedParty}
             />
           </Grid2>
 

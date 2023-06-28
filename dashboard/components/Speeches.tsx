@@ -26,10 +26,9 @@ const Speeches = () => {
   });
   const [detailOpen, setDetailOpen] = useState<Index | null>(null);
   const detailRef = useRef<HTMLDivElement>(null);
-  const [selectedParty, setSelectedParty] = useState<Record<
-    string,
-    string
-  > | null>(null);
+  const [selectedParty, setSelectedParty] = useState<
+    Record<string, string> | undefined
+  >();
 
   // API hooks
   const { data: frequencyResponseAut = [] } = useFrequencySearch({
@@ -179,7 +178,7 @@ const Speeches = () => {
           <div style={{ justifyContent: "center", display: "flex" }}>
             <IconButton
               onClick={() => {
-                setSelectedParty(null);
+                setSelectedParty(undefined);
                 handleDetailOpen(indexLeft);
               }}
               style={{
@@ -194,7 +193,7 @@ const Speeches = () => {
           <div style={{ justifyContent: "center", display: "flex" }}>
             <IconButton
               onClick={() => {
-                setSelectedParty(null);
+                setSelectedParty(undefined);
                 handleDetailOpen(indexRight);
               }}
               style={{

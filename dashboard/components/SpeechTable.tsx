@@ -1,5 +1,5 @@
-import { ArrowBack, ArrowForward, Circle } from "@mui/icons-material";
-import { Chip, IconButton, TableFooter } from "@mui/material";
+import { ArrowBack, ArrowForward, Circle, Person } from "@mui/icons-material";
+import { Avatar, Chip, IconButton, TableFooter, Tooltip } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -17,6 +17,8 @@ type SpeechTableProps = {
   handleChangePage: (page: number) => void;
   setChosenSpeech: (speech: number) => void;
   index: Index;
+  setSpeakerFilter: (speaker: string | undefined) => void;
+  setPartyFilter: (party: string) => void;
 };
 
 export default function SpeechTable({
@@ -26,6 +28,8 @@ export default function SpeechTable({
   setChosenSpeech,
   chosenSpeech,
   index,
+  setSpeakerFilter,
+  setPartyFilter,
 }: SpeechTableProps) {
   return (
     <TableContainer component={Paper}>
@@ -47,21 +51,33 @@ export default function SpeechTable({
             >
               <TableCell align="right">{speech.date.slice(0, 16)}</TableCell>
               <TableCell align="right">
-                {speech.speaker}
+                <Tooltip title="Click to filter speaker" placement="top">
+                  <Chip
+                    label={speech.speaker}
+                    icon={<Person />}
+                    size="small"
+                    onClick={() => setSpeakerFilter(speech.speaker)}
+                    style={{ marginBottom: 4 }}
+                  />
+                </Tooltip>
                 <br />
-
-                <Chip
-                  label={speech.party}
-                  size="small"
-                  icon={
-                    <Circle
-                      style={{ color: PARTY_COLORS[index][speech.party] }}
-                    />
-                  }
-                />
+                <Tooltip title="Click to filter party" placement="bottom">
+                  <Chip
+                    label={speech.party}
+                    size="small"
+                    icon={
+                      <Circle
+                        style={{ color: PARTY_COLORS[index][speech.party] }}
+                      />
+                    }
+                    onClick={() => setPartyFilter(speech.party)}
+                  />
+                </Tooltip>
               </TableCell>
               <TableCell align="right">
-                {speech.agenda.slice(0, 50)}...
+                <Tooltip title={speech.agenda} placement="right">
+                  <p>{speech.agenda.slice(0, 50)}...</p>
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}

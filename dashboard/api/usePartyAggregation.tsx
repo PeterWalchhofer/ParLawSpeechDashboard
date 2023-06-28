@@ -15,7 +15,7 @@ export function usePartyAggregation({
   dateFilter: DateFilterType;
 }) {
   return useQuery(
-    [index, user, keywords, dateFilter],
+    [index, user, keywords, dateFilter, "party"],
     (): Promise<PartyItem[]> => {
       const queries = {
         queries: keywords ? parseKeywords(keywords) : undefined,

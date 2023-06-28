@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 import { Amcat, AmcatQuery, useMiddlecatContext } from "../../amcat4react";
-import { useCurrentUserDetails } from "../../amcat4react/hooks/useCurrentUserDetails";
 import { parseKeywords } from "../modules/constants";
 import { DateFilterType, SpeechesResponse } from "../modules/types";
 
@@ -10,16 +9,18 @@ export function useQuerySpeech({
   dateFilter,
   selectedParty,
   index,
+  speakerFilter,
 }: {
   index: string;
   keywords: string[];
   page: number;
   dateFilter: DateFilterType;
   selectedParty?: string;
+  speakerFilter?: string;
 }) {
-  const { user  } = useMiddlecatContext();
+  const { user } = useMiddlecatContext();
   return useQuery(
-    [index, keywords, page, dateFilter, selectedParty],
+    [index, keywords, page, dateFilter, selectedParty, speakerFilter],
     (): Promise<SpeechesResponse> => {
       if (!user) return Promise.resolve({ speeches: [], total: 0 });
       const query: AmcatQuery = {
@@ -32,6 +33,11 @@ export function useQuerySpeech({
           ...(selectedParty && {
             party: {
               values: [selectedParty],
+            },
+          }),
+          ...(speakerFilter && {
+            speaker: {
+              values: [speakerFilter],
             },
           }),
         },
@@ -49,7 +55,3 @@ export function useQuerySpeech({
     }
   );
 }
-function useUser() {
-  throw new Error("Function not implemented.");
-}
-
