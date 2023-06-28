@@ -122,6 +122,7 @@ def preprocess_and_upload(country, path, amcat_host):
     columns = amcat_fieldtypes(speeches)
     columns["term_tfidf"]  = "text"
     columns["party"] = "keyword"
+    columns["speaker"] = "keyword"
     del speeches
 
     # create index and set field types
