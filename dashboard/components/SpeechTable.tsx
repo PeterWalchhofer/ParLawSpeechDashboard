@@ -97,10 +97,7 @@ export default function SpeechTable({
               <IconButton
                 aria-label="next page"
                 onClick={() => handleChangePage(page + 1)}
-                disabled={
-                  speechesResponse.total <=
-                  speechesResponse.speeches.length * (page + 1)
-                }
+                disabled={speechesResponse.total <= 10 * (page + 1)}
               >
                 <ArrowForward />
               </IconButton>
