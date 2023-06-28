@@ -51,7 +51,7 @@ export default function SpeechTable({
             >
               <TableCell align="right">{speech.date.slice(0, 16)}</TableCell>
               <TableCell align="right">
-                <Tooltip title="Click to filter speaker" placement="top">
+                <Tooltip title="Click to filter speaker" placement="top" arrow>
                   <Chip
                     label={speech.speaker}
                     icon={<Person />}
@@ -61,7 +61,7 @@ export default function SpeechTable({
                   />
                 </Tooltip>
                 <br />
-                <Tooltip title="Click to filter party" placement="bottom">
+                <Tooltip title="Click to filter party" placement="bottom" arrow>
                   <Chip
                     label={speech.party}
                     size="small"
