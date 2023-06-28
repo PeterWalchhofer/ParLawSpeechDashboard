@@ -31,12 +31,12 @@ const Speeches = () => {
   >();
 
   // API hooks
-  const { data: frequencyResponseAut = [] } = useFrequencySearch({
+  const { data: frequencyResponseAut = [], refetch: refetchAut } = useFrequencySearch({
     user,
     index: indexLeft,
     keywords: keywordInput,
   });
-  const { data: frequencyResponseGer = [] } = useFrequencySearch({
+  const { data: frequencyResponseGer = [], refetch: refetchGer } = useFrequencySearch({
     user,
     index: indexRight,
     keywords: keywordInput,
@@ -69,6 +69,8 @@ const Speeches = () => {
   function handleSearch() {
     if (!keywordInput) return;
     setDetailOpen(null);
+    refetchAut()
+    refetchGer()
   }
   function handleDetailOpen(country: Index) {
     setDetailOpen(country);
@@ -78,7 +80,11 @@ const Speeches = () => {
   }
 
   function handleSetSelectedParty(index: string) {
-    return (party: string) => {
+    return (party?: string) => {
+      if (!party) {
+        setSelectedParty(undefined);
+        return;
+      }
       setSelectedParty({ [index]: party });
       handleDetailOpen(index as Index);
     };
@@ -118,7 +124,7 @@ const Speeches = () => {
           </div>
 
           <SpeechChart
-            country="AUT"
+            country={indexLeft}
             keywordResponse={frequencyResponseAut}
             dateFilter={dateFilter}
             setDateFilter={setDateFilter}
@@ -140,7 +146,7 @@ const Speeches = () => {
           </div>
 
           <SpeechChart
-            country="GER"
+            country={indexRight}
             keywordResponse={frequencyResponseGer}
             dateFilter={dateFilter}
             setDateFilter={setDateFilter}
@@ -156,7 +162,6 @@ const Speeches = () => {
         <Grid2 xs={6} minHeight={380} paddingBottom={0}>
           <PartyStatistics
             index={indexLeft}
-            keywordInput={keywordInput}
             partyData={partyDataAut}
             dateFilter={dateFilter}
             selectedParty={selectedParty?.[indexLeft]}
@@ -166,7 +171,6 @@ const Speeches = () => {
         <Grid2 xs={6} minHeight={373} paddingBottom={0}>
           <PartyStatistics
             index={indexRight}
-            keywordInput={keywordInput}
             partyData={partyDataGer}
             dateFilter={dateFilter}
             selectedParty={selectedParty?.[indexRight]}

@@ -2,15 +2,22 @@
 import _ from "lodash";
 import dynamic from "next/dynamic";
 import { useCallback, useMemo } from "react";
-import { BLACK, BLUE, roundDateToYear } from "../modules/constants";
-import { DateFilterType, FrequencyData } from "../modules/types";
+import {
+  BLACK,
+  BLUE,
+  INDEX_LABELS,
+  roundDateToYear,
+} from "../modules/constants";
+import { DateFilterType, FrequencyData, Index } from "../modules/types";
+import { InfoOutlined } from "@mui/icons-material";
+import { Tooltip } from "@mui/material";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 type SpeechChartProps = {
   keywordResponse: FrequencyData[];
   dateFilter: DateFilterType;
   setDateFilter: (dateFilter: DateFilterType) => void;
-  country: string;
+  country: Index;
 };
 export default function SpeechChart({
   keywordResponse,
@@ -125,12 +132,28 @@ export default function SpeechChart({
   );
 
   return (
-    <Chart
-      height={280}
-      width={500}
-      type="line"
-      options={options}
-      series={[{ name: "Word Frequency", data: keywordData }]}
-    />
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 10, right: 20, zIndex: 100 }}>
+        <Tooltip
+          title={
+            <p>
+              Frequence of the keyword for {INDEX_LABELS[country].country} among
+              parliamentary speeches. <br /> <br /> Select a time frame by
+              dragging your mouse for further analysis{" "}
+            </p>
+          }
+          placement="left"
+        >
+          <InfoOutlined />
+        </Tooltip>
+      </div>
+      <Chart
+        height={280}
+        width={500}
+        type="line"
+        options={options}
+        series={[{ name: "Word Frequency", data: keywordData }]}
+      />
+    </div>
   );
 }

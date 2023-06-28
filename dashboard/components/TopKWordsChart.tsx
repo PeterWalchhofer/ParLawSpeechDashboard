@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import { BLACK, BLUE } from "../modules/constants";
 import { TFIDFResponse } from "../modules/types";
+import { Tooltip } from "@mui/material";
+import { InfoOutlined } from "@mui/icons-material";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 type TopKWordsChartProps = {
   topKResponse: TFIDFResponse;
@@ -64,7 +66,24 @@ export default function TopKWordsChart({
   );
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", top: 10, right: 20, zIndex: 100 }}>
+        <Tooltip
+          title={
+            <p>
+              This shows the most important words among the filtered speeches by
+              the chosen keywords and time interval.
+              <br />
+              <br />
+              <a href="https://wikipedia.org/wiki/Tf%e2%80%93idf" target="_blank" > TF-IDF</a> (term frequency–inverse document frequency) is one measure
+              to determine the importance of a word in a document.
+            </p>
+          }
+          placement="left"
+        >
+          <InfoOutlined />
+        </Tooltip>
+      </div>
       <Chart
         type="bar"
         height={400}

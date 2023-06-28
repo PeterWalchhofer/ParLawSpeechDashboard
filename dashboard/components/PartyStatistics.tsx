@@ -1,4 +1,4 @@
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -6,14 +6,14 @@ import { useMiddlecatContext } from "../../amcat4react";
 import { usePartyAggregation } from "../api/usePartyAggregation";
 import { BLACK, PARTY_COLORS, PartyItem, hexToHsl } from "../modules/constants";
 import { DateFilterType, Index } from "../modules/types";
+import { InfoOutlined } from "@mui/icons-material";
 
 type PartyStatisticsProps = {
   partyData: PartyItem[];
-  keywordInput: string[];
   index: Index;
   dateFilter: DateFilterType;
   selectedParty?: string;
-  setSelectedParty: (party: string) => void;
+  setSelectedParty: (party?: string) => void;
 };
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -30,7 +30,6 @@ function labelLineBreaks(str: string) {
 }
 
 export function PartyStatistics({
-  keywordInput,
   index,
   partyData,
   dateFilter,
@@ -129,6 +128,7 @@ export function PartyStatistics({
             const party = values[config.dataPointIndex].party;
             if (selectedParty === party) {
               setSelectedItem(null);
+              setSelectedParty(undefined);
               return;
             }
             setSelectedParty(party);
@@ -171,6 +171,7 @@ export function PartyStatistics({
           style={{
             display: "flex",
             justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <ToggleButtonGroup
@@ -179,10 +180,29 @@ export function PartyStatistics({
             aria-label="outlined button group"
             onChange={() => setNormalized((prev) => !prev)}
             size="small"
+            style={{ paddingLeft: 15 }}
           >
             <ToggleButton value={true}>Norm</ToggleButton>
             <ToggleButton value={false}>Total</ToggleButton>
           </ToggleButtonGroup>
+          <Tooltip
+            title={
+              <p>
+                This chart shows the share of speeches per party. <br />
+                Click on a bar to investigate the speeches of a party in detail.{" "}
+                <br />
+                <br />
+                <br />
+                <b>TOTAL:</b> The total number of speeches per party is shown.{" "}
+                <br />
+                <b>NORM:</b> The share of speeches per party is normalized by
+                the total number of speeches per party. <br />
+              </p>
+            }
+            placement="left"
+          >
+            <InfoOutlined />
+          </Tooltip>
         </div>
       </Grid2>
       <Grid2 ref={ref}>

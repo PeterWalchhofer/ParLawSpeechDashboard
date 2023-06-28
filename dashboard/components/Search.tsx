@@ -1,10 +1,11 @@
-import { Clear, Search as SearchIcon } from "@mui/icons-material";
+import { Clear, InfoOutlined, Search as SearchIcon } from "@mui/icons-material";
 import {
   Autocomplete,
   Chip,
   IconButton,
   TextField,
   TextFieldProps,
+  Tooltip,
 } from "@mui/material";
 
 type SearchType = {
@@ -33,22 +34,42 @@ const Search = ({ values, setValue, handleFetch }: SearchType) => {
           value={values}
           onChange={(_, value) => setValue(value || [])}
           options={[]}
+          disableClearable={false}
           renderInput={(params) => (
             <TextField
               {...params}
               variant="outlined"
               size="small"
-              //style={{ height: "2rem" }}
+              style={{ paddingRight: 0 }}
               placeholder="Search for keywords"
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (
                   <>
-                    {!!values?.length && (
-                      <IconButton onClick={() => setValue([])}>
-                        <Clear />
-                      </IconButton>
-                    )}
+                    <Tooltip
+                      title={
+                        <p>
+                          Filter speeches by keywords. You can use multiple
+                          Keywords, such as 'Edward Snowden' and 'Bradley
+                          Manning', or use multiple keywords like 'Russland' and
+                          'Russia' to cope for different languages
+                          <br />
+                          <br />
+                          Also{" "}
+                          <a
+                            href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html"
+                            target="_blank"
+                          >
+                            Lucene Query Syntax
+                          </a>{" "}
+                          is supported. This allows you to use boolean
+                          operators, proximity searches, wildcards, and more.
+                        </p>
+                      }
+                    >
+                      <InfoOutlined />
+                    </Tooltip>
+                    {params.InputProps.endAdornment}
                   </>
                 ),
               }}
