@@ -30,8 +30,8 @@ const Search = ({ values, setValue, handleFetch }: SearchType) => {
               />
             ))
           }
-          defaultValue={values}
-          onChange={(_, value) => setValue(value)}
+          value={values}
+          onChange={(_, value) => setValue(value || [])}
           options={[]}
           renderInput={(params) => (
             <TextField
@@ -39,11 +39,12 @@ const Search = ({ values, setValue, handleFetch }: SearchType) => {
               variant="outlined"
               size="small"
               //style={{ height: "2rem" }}
+              placeholder="Search for keywords"
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (
                   <>
-                    {values?.length && (
+                    {!!values?.length && (
                       <IconButton onClick={() => setValue([])}>
                         <Clear />
                       </IconButton>

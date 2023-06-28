@@ -81,7 +81,7 @@ export const Footer = ({ children, ...rest }: MyComponentProps) => {
                 style={{ marginRight: "10px", display: "flex" }}
                 href="https://github.com"
               >
-                Source Code <GitHub style={{ marginLeft: "5 px" }} />
+                Source Code <GitHub style={{ marginLeft: "5px" }} />
               </Link>
             </div>
           </div>
