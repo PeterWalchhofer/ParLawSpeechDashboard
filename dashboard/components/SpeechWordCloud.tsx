@@ -10,9 +10,13 @@ export default function SpeechWordCloud({
   chosenSpeech: any;
 }) {
   // WordCloud lib expects frequencies instead of tf-idf values. Scale to 0-1000:
-  const factor =
-    1000 /
-      Math.max(...chosenSpeech.term_tfidf.map((item: any) => item.value)) || 1;
+  const max_tfidf = useMemo(() => {
+    if (!chosenSpeech?.term_tfidf?.length) return null;
+    return Math.max(...chosenSpeech.term_tfidf.map((item: any) => item.value));
+  }, [chosenSpeech?.term_tfidf]);
+
+  const factor = 1000 / (max_tfidf || 1);
+
   const dataMemo: { text: string; value: number }[] = useMemo(
     () =>
       chosenSpeech?.term_tfidf.slice(0, 20).map((item: any) => ({
@@ -30,14 +34,14 @@ export default function SpeechWordCloud({
   );
 
   return (
-<div className="wordCloud">
-    <WordCloud
-      width={300}
-      height={450}
-      rotate={rotateFn}
-      data={dataMemo}
-      // fontWeight={fontWeightFn}
-    />
-</div>
+    <div className="wordCloud">
+      <WordCloud
+        width={300}
+        height={450}
+        rotate={rotateFn}
+        data={dataMemo}
+        // fontWeight={fontWeightFn}
+      />
+    </div>
   );
 }
