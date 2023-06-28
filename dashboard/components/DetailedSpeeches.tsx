@@ -193,8 +193,14 @@ export default function DetailedSpeeches({
       </Grid2>
 
       {speeches && (
-        <Grid2 container maxHeight={"900px"} minHeight={"900px"}>
-          <Grid2 xs={5}>
+        <Grid2
+          container
+          maxHeight={"900px"}
+          minHeight={"900px"}
+          justifyContent="center"
+          width="100%"
+        >
+          <Grid2 xs={6}>
             <SpeechTable
               speechesResponse={speeches}
               handleChangePage={(page: number) => setPage(page)}
@@ -207,7 +213,7 @@ export default function DetailedSpeeches({
             />
           </Grid2>
 
-          <Grid2 xs={6} style={{ margin: 10 }} height="100%">
+          <Grid2 xs={6} style={{ padding: 10 }} height="100%">
             <Stack
               direction="row"
               spacing={1}
