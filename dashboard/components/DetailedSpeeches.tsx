@@ -33,7 +33,7 @@ type DetailedSpeechesProps = {
   keywordInput: string[];
   index: Index;
   selectedParty?: string;
-  setSelectedParty: (party: string) => void;
+  setSelectedParty: (party?: string) => void;
 };
 export default function DetailedSpeeches({
   dateFilter,
@@ -72,6 +72,11 @@ export default function DetailedSpeeches({
   useEffect(() => {
     setSpeakerInput(speakerFilter || "");
   }, [speakerFilter]);
+
+  useEffect(() => {
+    setSpeakerFilter(undefined);
+    setSelectedParty(undefined);
+  }, [index, dateFilter]);
 
   const highlightWords = highlightTfIdf
     ? speeches?.speeches[chosenSpeech]?.term_tfidf
