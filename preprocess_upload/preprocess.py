@@ -107,7 +107,8 @@ def compute_tf_idf(df, lang):
 @click.argument("country", required=True)
 @click.option("--path", default="data", help="Path to the data folder")
 @click.option("--amcat-host", default="http://localhost/amcat", help="AmCAT host")
-def preprocess_and_upload(country, path, amcat_host):
+@click.option("--guest-role", default="admin", help="Permissions for guests on newly created indicees. Choose 'reader' for production.")
+def preprocess_and_upload(country, path, amcat_host, guest_role):
     print("Preprocessing and uploading speeches for", country)
     
     amcat = AmcatClient(amcat_host)
@@ -126,11 +127,11 @@ def preprocess_and_upload(country, path, amcat_host):
     del speeches
 
     # create index and set field types
-    amcat.create_index(index_name, guest_role="admin")
+    amcat.create_index(index_name, guest_role=guest_role)
     amcat.set_fields(index_name, columns)
 
     print("Uploading speeches to AmCAT")
-    amcat.upload_documents(index_name, speeches_tftidf, chunk_size=5000)
+    amcat.upload_documents(index_name, speeches_tftidf, chunk_size=500)
 
 
 if __name__ == "__main__":
