@@ -40,7 +40,7 @@ function App() {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <QueryClientProvider client={queryClient}>
-        <MiddlecatWrapper loginRoute="/" bff="/api/bffAuth">
+        <MiddlecatWrapper loginRoute="https://middlecat.up.railway.app" bff="https://middlecat.up.railway.app/api/bffAuth">
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <ThemeProvider theme={darkTheme}>
               <CssBaseline />
