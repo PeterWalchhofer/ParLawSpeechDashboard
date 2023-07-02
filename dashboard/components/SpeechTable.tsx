@@ -54,6 +54,13 @@ export default function SpeechTable({
                 <Tooltip title="Click to filter speaker" placement="top" arrow>
                   <Chip
                     label={speech.speaker}
+                    sx={{
+                      height: 'auto',
+                      '& .MuiChip-label': {
+                        display: 'block',
+                        whiteSpace: 'normal',
+                      },
+                    }}
                     icon={<Person />}
                     size="small"
                     onClick={() => setSpeakerFilter(speech.speaker)}
