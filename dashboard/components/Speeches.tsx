@@ -8,6 +8,7 @@ import Search from "./Search";
 import ChartColumn from "./ChartColumn";
 import { useMiddlecatContext } from "../../amcat4react";
 import { LoadingIndicator } from "./LoadingIndicator";
+import { useMediaQuery } from "@mui/material";
 
 const defaultDateFilter: DateFilterType = {
   fromDate: new Date(2013, 0, 1),
@@ -25,6 +26,8 @@ const Speeches = () => {
     Record<string, string> | undefined
   >();
   const { user, signInGuest } = useMiddlecatContext();
+  // check is mobile
+  const isMobile = useMediaQuery("(max-width:1000px)");
 
   
   function handleDetailOpen(country: Index) {
@@ -55,7 +58,7 @@ const Speeches = () => {
     const hostEnv = process.env.NEXT_PUBLIC_AMCAT_HOST;
     signInGuest?.(hostEnv || "http://localhost/amcat", "", false);
   }, [user]);
-  
+
   return (
     <div style={{ minWidth: "0" }}>
       <LoadingIndicator />
@@ -75,6 +78,7 @@ const Speeches = () => {
         />
 
         {/* Right Column */}
+        {!isMobile && (
         <ChartColumn
           index={indexRight}
           setChangeIndex={setIndexRight}
@@ -84,8 +88,9 @@ const Speeches = () => {
           selectedParty={selectedParty?.[indexRight]}
           setSelectedParty={handleSetSelectedParty(indexRight)}
         />
+        )}
 
-        <Grid2 xs={6}>
+        <Grid2 xs={isMobile? 12:6}>
           <DownArrow
             detailOpen={detailOpen === indexLeft}
             onClick={() => {
@@ -94,7 +99,7 @@ const Speeches = () => {
             }}
           />
         </Grid2>
-        <Grid2 xs={6}>
+        {!isMobile && <Grid2 xs={6}>
           <DownArrow
             detailOpen={detailOpen === indexRight}
             onClick={() => {
@@ -103,6 +108,7 @@ const Speeches = () => {
             }}
           />
         </Grid2>
+        }
       </Grid2>
       <div ref={detailRef}>
         {detailOpen && (

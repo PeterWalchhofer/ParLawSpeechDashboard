@@ -74,6 +74,12 @@ export default function DetailedSpeeches({
   }, [speakerFilter]);
 
   useEffect(() => {
+    if (chosenSpeech == undefined || (speeches?.speeches?.length || 0) <= chosenSpeech) {
+      setChosenSpeech(0);
+    }
+  }, [speeches]);
+
+  useEffect(() => {
     setSpeakerFilter(undefined);
     setSelectedParty(undefined);
   }, [index, dateFilter]);

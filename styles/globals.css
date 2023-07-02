@@ -9,3 +9,15 @@ div.wordCloud > div > svg  {
 .MuiTooltip-tooltip {
   font-size: 1rem;
 }
+
+html, body {
+  /* if min width > 1000px */
+  @media (max-width: 1000px) {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #1B1B1E;
+    position: absolute
+  }
+
+}

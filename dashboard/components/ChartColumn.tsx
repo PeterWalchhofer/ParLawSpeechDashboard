@@ -1,5 +1,5 @@
 "use client";
-import { MenuItem, Select } from "@mui/material";
+import { MenuItem, Select, useMediaQuery } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { useMiddlecatContext } from "../../amcat4react";
 import { useFrequencySearch } from "../api/useFrequencySearch";
@@ -33,6 +33,8 @@ export default function ChartColumn({
   showHelpAnnotation = false
 }: ColumnProps) {
   const { user } = useMiddlecatContext();
+  const isMobile = useMediaQuery("(max-width:1000px)");
+
 
   const { data: keywordResponse = [] } = useFrequencySearch({
     user,
@@ -51,7 +53,7 @@ export default function ChartColumn({
   });
 
   return (
-    <Grid2 xs={6} minHeight={selectedParty ? 380 : 431} paddingBottom={0}>
+    <Grid2 xs={isMobile ? 12: 6} minHeight={380} paddingBottom={0}>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Select
           value={index}
