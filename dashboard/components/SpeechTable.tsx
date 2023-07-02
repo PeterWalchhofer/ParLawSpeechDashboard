@@ -1,5 +1,5 @@
 import { ArrowBack, ArrowForward, Circle, Person } from "@mui/icons-material";
-import { Avatar, Chip, IconButton, TableFooter, Tooltip } from "@mui/material";
+import { Chip, IconButton, TableFooter, Tooltip } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,7 +13,7 @@ import { Index, SpeechesResponse } from "../modules/types";
 type SpeechTableProps = {
   speechesResponse: SpeechesResponse;
   page: number;
-  chosenSpeech: number;
+  chosenSpeech?: number;
   handleChangePage: (page: number) => void;
   setChosenSpeech: (speech: number) => void;
   index: Index;
@@ -55,10 +55,10 @@ export default function SpeechTable({
                   <Chip
                     label={speech.speaker}
                     sx={{
-                      height: 'auto',
-                      '& .MuiChip-label': {
-                        display: 'block',
-                        whiteSpace: 'normal',
+                      height: "auto",
+                      "& .MuiChip-label": {
+                        display: "block",
+                        whiteSpace: "normal",
                       },
                     }}
                     icon={<Person />}

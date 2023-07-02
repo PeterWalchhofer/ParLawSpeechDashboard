@@ -7,7 +7,7 @@ import { randomIntFromInterval, sd } from "../modules/constants";
 export default function SpeechWordCloud({
   chosenSpeech,
 }: {
-  chosenSpeech: any;
+  chosenSpeech?: any;
 }) {
   // WordCloud lib expects frequencies instead of tf-idf values. Scale to 0-1000:
   const max_tfidf = useMemo(() => {
@@ -23,14 +23,14 @@ export default function SpeechWordCloud({
         text: item.term.toUpperCase(),
         value: item.value * factor,
       })) || [],
-    [chosenSpeech.term_tfidf]
+    [chosenSpeech?.term_tfidf]
   );
   const rotateFn = useCallback(() => randomIntFromInterval(-45, 45), []);
   const fontWeightFn = useCallback(
     (word: Word) =>
       word.value /
       sd(chosenSpeech.term_tfidf.map((item: any) => item.value * 5000)),
-    [chosenSpeech.term_tfidf]
+    [chosenSpeech?.term_tfidf]
   );
 
   return (

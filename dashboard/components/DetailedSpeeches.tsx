@@ -43,7 +43,7 @@ export default function DetailedSpeeches({
   selectedParty,
   setSelectedParty,
 }: DetailedSpeechesProps) {
-  const [chosenSpeech, setChosenSpeech] = useState<number>(0);
+  const [chosenSpeech, setChosenSpeech] = useState<number | undefined>(0);
   const [showWordCloud, setShowWordCloud] = useState<boolean>(false);
   const [speakerInput, setSpeakerInput] = useState<string>("");
   const [speakerFilter, setSpeakerFilter] = useState<string | undefined>();
@@ -78,11 +78,12 @@ export default function DetailedSpeeches({
     setSelectedParty(undefined);
   }, [index, dateFilter]);
 
-  const highlightWords = highlightTfIdf
-    ? speeches?.speeches[chosenSpeech]?.term_tfidf
-        .slice(0, 20)
-        .map((word) => word.term)
-    : keywordInput;
+  const highlightWords =
+    chosenSpeech !== undefined && highlightTfIdf
+      ? speeches?.speeches?.[chosenSpeech]?.term_tfidf
+          .slice(0, 20)
+          .map((word) => word.term)
+      : keywordInput;
 
   return (
     <Grid2 container spacing={2} style={{ minHeight: "500px" }}>
@@ -255,7 +256,11 @@ export default function DetailedSpeeches({
             </Stack>
 
             {showWordCloud && (
-              <SpeechWordCloud chosenSpeech={speeches.speeches[chosenSpeech]} />
+              <SpeechWordCloud
+                chosenSpeech={
+                  chosenSpeech !== undefined && speeches.speeches[chosenSpeech]
+                }
+              />
             )}
             {!showWordCloud && (
               <Paper
@@ -269,15 +274,32 @@ export default function DetailedSpeeches({
                   overflowX: "hidden",
                 }}
               >
-                <h4>{speeches.speeches[chosenSpeech]?.agenda} </h4>
+                <h4>
+                  {chosenSpeech !== undefined
+                    ? speeches.speeches[chosenSpeech]?.agenda
+                    : null}{" "}
+                </h4>
                 <p>
-                  <b>{speeches.speeches[chosenSpeech]?.speaker} </b> ·{" "}
-                  <i>{speeches.speeches[chosenSpeech]?.party}</i>
+                  <b>
+                    {chosenSpeech !== undefined
+                      ? speeches.speeches[chosenSpeech]?.speaker
+                      : null}{" "}
+                  </b>{" "}
+                  ·{" "}
+                  <i>
+                    {chosenSpeech !== undefined
+                      ? speeches.speeches[chosenSpeech]?.party
+                      : null}
+                  </i>
                 </p>
 
                 <p>
                   <Highlighter
-                    textToHighlight={speeches.speeches[chosenSpeech]?.text}
+                    textToHighlight={
+                      chosenSpeech !== undefined
+                        ? speeches.speeches[chosenSpeech]?.text
+                        : ""
+                    }
                     searchWords={highlightWords || keywordInput}
                     highlightStyle={{
                       backgroundColor: "white",

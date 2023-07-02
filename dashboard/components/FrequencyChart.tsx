@@ -13,18 +13,18 @@ import { InfoOutlined } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-type SpeechChartProps = {
+type FrequencyChartProps = {
   keywordResponse: FrequencyData[];
   dateFilter: DateFilterType;
   setDateFilter: (dateFilter: DateFilterType) => void;
   country: Index;
 };
-export default function SpeechChart({
+export default function FrequencyChart({
   keywordResponse,
   dateFilter,
   setDateFilter,
   country,
-}: SpeechChartProps) {
+}: FrequencyChartProps) {
   const keywordData = useMemo(
     () =>
       keywordResponse.map((item) => ({

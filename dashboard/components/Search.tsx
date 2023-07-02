@@ -1,20 +1,18 @@
-import { Clear, InfoOutlined, Search as SearchIcon } from "@mui/icons-material";
+import { InfoOutlined } from "@mui/icons-material";
 import {
   Autocomplete,
   Chip,
-  IconButton,
   TextField,
   TextFieldProps,
-  Tooltip,
+  Tooltip
 } from "@mui/material";
 
 type SearchType = {
   values: string[];
   setValue: (value: string[]) => void;
-  handleFetch: () => void;
 } & TextFieldProps;
 
-const Search = ({ values, setValue, handleFetch }: SearchType) => {
+const Search = ({ values, setValue }: SearchType) => {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -75,20 +73,7 @@ const Search = ({ values, setValue, handleFetch }: SearchType) => {
               }}
             />
           )}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleFetch();
-            }
-          }}
         />
-
-        <IconButton
-          onClick={() => {
-            handleFetch();
-          }}
-        >
-          <SearchIcon />
-        </IconButton>
       </div>
     </div>
   );

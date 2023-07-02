@@ -9,8 +9,8 @@ import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MiddlecatWrapper } from "../amcat4react";
 
-import ParLawSpeech from "../dashboard/components/ParLawSpeech";
 import { Layout } from "../dashboard/components/Layout";
+import Speeches from "../dashboard/components/Speeches";
 
 // document.body.style.backgroundColor = "#000000f2";
 const darkTheme = createTheme({
@@ -45,7 +45,7 @@ function App() {
             <ThemeProvider theme={darkTheme}>
               <CssBaseline />
               <Layout>
-                <ParLawSpeech />
+                <Speeches />
               </Layout>
             </ThemeProvider>
           </LocalizationProvider>
