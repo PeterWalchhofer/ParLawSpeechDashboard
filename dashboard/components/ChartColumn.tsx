@@ -19,6 +19,7 @@ type ColumnProps = {
   setDateFilter: (dateFilter: DateFilterType) => void;
   selectedParty?: string;
   setSelectedParty: (party?: string) => void;
+  showHelpAnnotation?: boolean;
 };
 
 export default function ChartColumn({
@@ -29,6 +30,7 @@ export default function ChartColumn({
   setDateFilter,
   selectedParty,
   setSelectedParty,
+  showHelpAnnotation = false
 }: ColumnProps) {
   const { user } = useMiddlecatContext();
 
@@ -54,6 +56,7 @@ export default function ChartColumn({
         <Select
           value={index}
           onChange={(e) => setChangeIndex(e.target.value as Index)}
+          size="small"
           style={{
             color: "white",
             marginLeft: 10,
@@ -73,10 +76,12 @@ export default function ChartColumn({
         keywordResponse={keywordResponse}
         dateFilter={dateFilter}
         setDateFilter={setDateFilter}
+        showHelpAnnotation={showHelpAnnotation}
       />
 
       <TopKWordsChart
         topKResponse={topKResponse}
+        dateFilter={dateFilter}
         yAxisRight={!!selectedParty}
       />
 

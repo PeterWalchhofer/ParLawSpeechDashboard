@@ -18,12 +18,14 @@ type FrequencyChartProps = {
   dateFilter: DateFilterType;
   setDateFilter: (dateFilter: DateFilterType) => void;
   country: Index;
+  showHelpAnnotation: boolean;
 };
 export default function FrequencyChart({
   keywordResponse,
   dateFilter,
   setDateFilter,
   country,
+  showHelpAnnotation,
 }: FrequencyChartProps) {
   const keywordData = useMemo(
     () =>
@@ -68,6 +70,29 @@ export default function FrequencyChart({
           text: "Frequency",
           // offsetX: 30,
         },
+      },
+      title: {
+        text: "Frequency of keyword(s) over time",
+        align: "center",
+        style: {
+          fontWeight: "normal",
+          fontSize: "12px",
+          color: "#ccc"
+        }
+      },
+      annotations: {
+        texts: [
+          showHelpAnnotation
+            ? {
+                text: "⭰ Click and drag to filter ⭲",
+                x: "50%",
+                y: "30%",
+                textAnchor: "middle",
+                stroke: "#fff",
+                fontSize: "14px",
+              }
+            : {},
+        ],
       },
       theme: { mode: "dark", palette: "palette3" },
       xaxis: {
@@ -128,11 +153,11 @@ export default function FrequencyChart({
         },
       },
     }),
-    [dateFilter, handleDebouncedSelection, country]
+    [dateFilter, handleDebouncedSelection, country, showHelpAnnotation]
   );
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative",  marginTop: "15px" }}>
       <div style={{ position: "absolute", top: 10, right: 20, zIndex: 100 }}>
         <Tooltip
           title={

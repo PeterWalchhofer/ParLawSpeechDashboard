@@ -27,11 +27,11 @@ export function Layout({ children }: any) {
             }}
           >
             <a href="/">
-              <OptedLogo width={55} />
+              <OptedLogo width={45} />
             </a>
             <Typography
               style={{ marginTop: "5px" }}
-              fontSize={"1.2rem"}
+              fontSize={"1rem"}
               variant="caption"
               color="white"
             >

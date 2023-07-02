@@ -9,14 +9,16 @@ import ChartColumn from "./ChartColumn";
 import { useMiddlecatContext } from "../../amcat4react";
 import { LoadingIndicator } from "./LoadingIndicator";
 
+const defaultDateFilter: DateFilterType = {
+  fromDate: new Date(2013, 0, 1),
+  toDate: new Date(2016, 0, 1),
+}
+
 const Speeches = () => {
   const [keywordInput, setKeywordInput] = useState(["Russland"]);
   const [indexLeft, setIndexLeft] = useState<Index>("speeches_austria");
   const [indexRight, setIndexRight] = useState<Index>("speeches_germany");
-  const [dateFilter, setDateFilter] = useState<DateFilterType>({
-    fromDate: new Date(2013, 0, 1),
-    toDate: new Date(2016, 0, 1),
-  });
+  const [dateFilter, setDateFilter] = useState<DateFilterType>(defaultDateFilter);
   const [detailOpen, setDetailOpen] = useState<Index | null>(null);
   const detailRef = useRef<HTMLDivElement>(null);
   const [selectedParty, setSelectedParty] = useState<
@@ -53,7 +55,7 @@ const Speeches = () => {
     const hostEnv = process.env.NEXT_PUBLIC_AMCAT_HOST;
     signInGuest?.(hostEnv || "http://localhost/amcat", "", false);
   }, [user]);
-
+  
   return (
     <div style={{ minWidth: "0" }}>
       <LoadingIndicator />
@@ -69,6 +71,7 @@ const Speeches = () => {
           setDateFilter={setDateFilter}
           selectedParty={selectedParty?.[indexLeft]}
           setSelectedParty={handleSetSelectedParty(indexLeft)}
+          showHelpAnnotation={dateFilter == defaultDateFilter}
         />
 
         {/* Right Column */}

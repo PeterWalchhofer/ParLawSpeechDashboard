@@ -87,6 +87,15 @@ export function PartyStatistics({
       fill: {
         opacity: 0.95,
       },
+      title: {
+        text: `Party share ${dateFilter.fromDate.getFullYear()} - ${dateFilter.toDate.getFullYear()} wrt. keyword(s)`,
+        align: "center",
+        style: {
+          fontWeight: "normal",
+          fontSize: "12px",
+          color: "#ccc"
+        }
+    },
 
       theme: { mode: "dark", palette: "palette3" },
       yaxis: {

@@ -2,17 +2,19 @@ import { capitalize } from "lodash";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import { BLACK, BLUE } from "../modules/constants";
-import { TFIDFResponse } from "../modules/types";
+import { DateFilterType, TFIDFResponse } from "../modules/types";
 import { Tooltip } from "@mui/material";
 import { InfoOutlined } from "@mui/icons-material";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 type TopKWordsChartProps = {
   topKResponse: TFIDFResponse;
   yAxisRight?: boolean;
+  dateFilter: DateFilterType;
 };
 export default function TopKWordsChart({
   topKResponse,
   yAxisRight,
+  dateFilter
 }: TopKWordsChartProps) {
   const values = useMemo(
     () => topKResponse.map((item) => ({ x: capitalize(item[0]), y: item[1] })),
@@ -44,7 +46,15 @@ export default function TopKWordsChart({
           // offsetX: 30,
         },
       },
-
+      title: {
+        text: `Top Relevant Words ${dateFilter.fromDate.getFullYear()} - ${dateFilter.toDate.getFullYear()} wrt. keyword(s)`,
+        align: "center",
+        style: {
+          fontWeight: "normal",
+          fontSize: "12px",
+          color: "#ccc"
+        }
+    },
       chart: {
         type: "bar",
         background: BLACK,
@@ -66,7 +76,7 @@ export default function TopKWordsChart({
   );
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", marginTop: "20px" }}>
       <div style={{ position: "absolute", top: 10, right: 20, zIndex: 100 }}>
         <Tooltip
           title={
