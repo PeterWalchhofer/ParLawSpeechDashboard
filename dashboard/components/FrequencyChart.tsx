@@ -47,7 +47,8 @@ export default function FrequencyChart({
     ),
     []
   );
-
+  
+  // @ts-ignore TODO
   const options: ApexCharts.ApexOptions = useMemo(
     () => ({
       colors: [BLUE],
